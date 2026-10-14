@@ -2,6 +2,7 @@ import { getSession } from "@/lib/session";
 import { getMyFamilies } from "@/app/actions/families";
 import { getBalanceSummary } from "@/app/actions/balance";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 export default async function BalancePage() {
   const session = await getSession();
@@ -10,29 +11,51 @@ export default async function BalancePage() {
   if (families.length === 0) redirect("../dashboard");
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
-      <h1 className="text-2xl font-bold">Time balance</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-slate-900">Time balance</h1>
       {await Promise.all(families.map(async (f) => {
         const s = await getBalanceSummary(f.id);
+        const positive = s.viewingUserHalfDays > 0;
+        const negative = s.viewingUserHalfDays < 0;
         return (
-          <section key={f.id} className="mt-6 rounded border bg-white p-4">
-            <h2 className="text-lg font-semibold">{f.name}</h2>
-            <p className="mt-2 text-2xl font-bold">{s.viewingUserHalfDays} half-days</p>
-            <p className="text-sm text-slate-600">
-              {s.viewingUserHalfDays > 0 ? "You have more compensable parenting time than the baseline." : s.viewingUserHalfDays < 0 ? "You have less compensable parenting time than the baseline." : "No outstanding compensable difference."}
+          <section key={f.id} className="rounded-2xl bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-slate-900">{f.name}</h2>
+              <span className="text-xs text-slate-500">{s.isParentA ? "Parent A view" : "Parent B view"}</span>
+            </div>
+            <p className={`text-5xl font-bold ${positive ? "text-indigo-600" : negative ? "text-rose-600" : "text-slate-900"}`}>
+              {s.viewingUserHalfDays}
             </p>
-            <h3 className="mt-4 font-semibold">Recent adjustments</h3>
-            <ul className="mt-2 space-y-1">
-              {s.entries.length === 0 && <li className="text-slate-500">None</li>}
-              {s.entries.map((e) => (
-                <li key={e.id} className="border-b py-1 text-sm">
-                  <span className="font-medium">{e.amountHalfDays > 0 ? "+" : ""}{e.amountHalfDays} hd</span> — {e.reason} ({e.effectiveDate})
-                </li>
-              ))}
-            </ul>
+            <p className="mt-2 text-sm text-slate-600">
+              {positive
+                ? "You have more compensable parenting time than the agreed baseline."
+                : negative
+                ? "You have less compensable parenting time than the agreed baseline."
+                : "No outstanding compensable difference."}
+            </p>
+            <p className="mt-1 text-xs text-slate-400">Measured in half-day units.</p>
+
+            <h3 className="mt-6 font-semibold text-slate-900">Recent adjustments</h3>
+            <div className="mt-3 space-y-2">
+              {s.entries.length === 0 ? (
+                <p className="text-slate-500">None yet.</p>
+              ) : (
+                s.entries.map((e) => (
+                  <div key={e.id} className="flex flex-col rounded-xl border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="font-medium text-slate-900">{e.reason}</p>
+                      <p className="text-xs text-slate-500">{e.effectiveDate}</p>
+                    </div>
+                    <span className={`mt-2 font-semibold sm:mt-0 ${e.amountHalfDays > 0 ? "text-indigo-600" : "text-rose-600"}`}>
+                      {e.amountHalfDays > 0 ? "+" : ""}{e.amountHalfDays} hd
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           </section>
         );
       }))}
-    </main>
+    </div>
   );
 }
