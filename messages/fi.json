@@ -42,7 +42,7 @@
     "addEvent": "Lisää tapahtuma",
     "requestsShort": "Muutospyynnöt",
     "balanceTitle": "Aikasaldo",
-    "balanceValue": "{value} puolipäivää",
+    "balanceUnit": "vrk",
     "balanceDetails": "Näytä erittely",
     "balancePositive": "Sinulla on enemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
     "balanceNegative": "Sinulla on vähemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",

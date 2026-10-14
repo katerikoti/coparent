@@ -4,11 +4,11 @@ import { generateFamilyPeriods, nextHandover } from "@/lib/familySchedule";
 import { listChangeRequests } from "@/app/actions/requests";
 import { getBalanceSummary } from "@/app/actions/balance";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import Link from "next/link";
 import InviteButton from "./InviteButton";
 import MonthCalendar, { parentColors } from "@/components/MonthCalendar";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, formatDays } from "@/lib/format";
 import { user as userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
@@ -21,6 +21,7 @@ export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
   const calendarT = await getTranslations("calendar");
   const nav = await getTranslations("nav");
+  const locale = await getLocale();
 
   if (families.length === 0) {
     return (
@@ -102,7 +103,7 @@ export default async function DashboardPage() {
                       : "text-slate-900"
                   }`}
                 >
-                  {t("balanceValue", { value: balance.viewingUserHalfDays })}
+                  {formatDays(balance.viewingUserHalfDays, locale)} {t("balanceUnit")}
                 </p>
                 <Link href="../balance" className="mt-2 inline-block text-sm text-violet-600 underline">
                   {t("balanceDetails")}

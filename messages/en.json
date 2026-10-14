@@ -42,7 +42,7 @@
     "addEvent": "Add event",
     "requestsShort": "Change requests",
     "balanceTitle": "Time balance",
-    "balanceValue": "{value} half-days",
+    "balanceUnit": "days",
     "balanceDetails": "View breakdown",
     "balancePositive": "You have more compensable parenting time than the agreed baseline.",
     "balanceNegative": "You have less compensable parenting time than the agreed baseline.",
