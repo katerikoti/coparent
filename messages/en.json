@@ -41,6 +41,7 @@
     "noFamily": "No family yet.",
     "createFamily": "Create family",
     "addEvent": "Add event",
+    "requestChange": "Request change",
     "requestsShort": "Change requests",
     "balanceTitle": "Time balance",
     "balanceUnit": "days",
@@ -98,7 +99,40 @@
   },
   "requests": {
     "title": "Change requests",
-    "noRequests": "No requests"
+    "newRequest": "Request change",
+    "noRequests": "No requests.",
+    "formTitle": "Request a change",
+    "formSubtitle": "Describe what you're requesting. The other parent can accept or decline.",
+    "whatRequesting": "What are you requesting?",
+    "whatPlaceholder": "e.g. I'd like the children for the weekend of June 20–22.",
+    "proposedStart": "Requested period starts",
+    "proposedEnd": "Requested period ends",
+    "submit": "Send request",
+    "sending": "Sending…",
+    "failed": "Sending the request failed.",
+    "endBeforeStart": "The end time must be after the start time.",
+    "reasonRequired": "Please describe what you're requesting.",
+    "back": "Back to change requests",
+    "requestedBy": "Requested by: {name}",
+    "originalPeriod": "Original",
+    "proposedPeriod": "Proposed",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw request",
+    "awaiting": "Awaiting the other parent's response.",
+    "respondFailed": "Sending your response failed.",
+    "status": {
+      "pending": "Awaiting response",
+      "approved": "Approved",
+      "declined": "Declined",
+      "counterproposed": "Counter-proposed",
+      "withdrawn": "Withdrawn"
+    },
+    "category": {
+      "compensable": "Compensable",
+      "exception": "One-off",
+      "permanent": "Permanent"
+    }
   },
   "invite": {
     "acceptTitle": "Accept invitation",
@@ -114,10 +148,26 @@
     "empty": "No events yet.",
     "subtitle": "All events added to the family calendar.",
     "formTitle": "New event",
-    "formSubtitle": "Add a shared event to the family calendar.",
-    "titlePlaceholder": "Title",
-    "notesPlaceholder": "Notes",
+    "formSubtitle": "Add an event to the family calendar: choose a type, name and duration.",
+    "nameLabel": "Name",
+    "titlePlaceholder": "e.g. Anna's birthday",
+    "typeLabel": "Type",
+    "startLabel": "Starts",
+    "endLabel": "Ends",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Additional details (optional)",
     "create": "Create event",
-    "back": "Back to events"
+    "saving": "Saving…",
+    "failed": "Creating the event failed.",
+    "endBeforeStart": "The end time must be after the start time.",
+    "back": "Back to events",
+    "types": {
+      "birthday": "Birthday",
+      "business_trip": "Business trip",
+      "travel_with_kids": "Travel with children",
+      "travel_without_kids": "Travel without children",
+      "doctor": "Doctor's appointment",
+      "school": "School related"
+    }
   }
 }

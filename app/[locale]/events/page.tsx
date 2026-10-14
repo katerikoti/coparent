@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { formatDateTime } from "@/lib/format";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { eventTypeLabel } from "@/lib/eventTypes";
 
 export default async function EventsPage() {
   const session = await getSession();
@@ -12,6 +13,15 @@ export default async function EventsPage() {
   const families = await getMyFamilies();
   if (families.length === 0) redirect("../dashboard");
   const t = await getTranslations("events");
+
+  const typeLabels: Record<string, string> = {
+    birthday: t("types.birthday"),
+    business_trip: t("types.business_trip"),
+    travel_with_kids: t("types.travel_with_kids"),
+    travel_without_kids: t("types.travel_without_kids"),
+    doctor: t("types.doctor"),
+    school: t("types.school"),
+  };
 
   const eventsByFamily = await Promise.all(
     families.map(async (f) => ({ family: f, events: await listEvents(f.id) })),
@@ -47,7 +57,7 @@ export default async function EventsPage() {
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="font-semibold text-slate-900">{e.title}</h3>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                      {e.type.replace(/_/g, " ")}
+                      {eventTypeLabel(e.type, typeLabels)}
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-slate-600">

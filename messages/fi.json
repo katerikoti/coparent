@@ -41,6 +41,7 @@
     "noFamily": "Perhettä ei ole vielä luotu.",
     "createFamily": "Luo perhe",
     "addEvent": "Lisää tapahtuma",
+    "requestChange": "Pyydä muutos",
     "requestsShort": "Muutospyynnöt",
     "balanceTitle": "Aikasaldo",
     "balanceUnit": "vrk",
@@ -98,7 +99,40 @@
   },
   "requests": {
     "title": "Muutospyynnöt",
-    "noRequests": "Ei muutospyyntöjä"
+    "newRequest": "Pyydä muutos",
+    "noRequests": "Ei muutospyyntöjä.",
+    "formTitle": "Pyydä muutos",
+    "formSubtitle": "Kerro, mitä pyydät. Toinen vanhempi voi hyväksyä tai hylätä pyynnön.",
+    "whatRequesting": "Mitä pyydät?",
+    "whatPlaceholder": "Esim. haluaisin lapset viikonlopuksi 20.–22.6.",
+    "proposedStart": "Pyydetty ajanjakso alkaa",
+    "proposedEnd": "Pyydetty ajanjakso päättyy",
+    "submit": "Lähetä pyyntö",
+    "sending": "Lähetetään…",
+    "failed": "Pyynnön lähetys epäonnistui.",
+    "endBeforeStart": "Päättymisajan on oltava alkamisajan jälkeen.",
+    "reasonRequired": "Kirjoita, mitä pyydät.",
+    "back": "Takaisin muutospyyntöihin",
+    "requestedBy": "Pyytäjä: {name}",
+    "originalPeriod": "Alkuperäinen",
+    "proposedPeriod": "Ehdotettu",
+    "accept": "Hyväksy",
+    "decline": "Hylkää",
+    "withdraw": "Peru pyyntö",
+    "awaiting": "Odottaa toisen vanhemman vastausta.",
+    "respondFailed": "Vastauksen lähetys epäonnistui.",
+    "status": {
+      "pending": "Odottaa vastausta",
+      "approved": "Hyväksytty",
+      "declined": "Hylätty",
+      "counterproposed": "Vastaehdotettu",
+      "withdrawn": "Peruutettu"
+    },
+    "category": {
+      "compensable": "Korvattava",
+      "exception": "Kertaluonteinen",
+      "permanent": "Pysyvä"
+    }
   },
   "invite": {
     "acceptTitle": "Hyväksy kutsu",
@@ -114,10 +148,26 @@
     "empty": "Ei tapahtumia vielä.",
     "subtitle": "Kaikki perheen kalenteriin lisätyt tapahtumat.",
     "formTitle": "Uusi tapahtuma",
-    "formSubtitle": "Lisää jaettu tapahtuma perheen kalenteriin.",
-    "titlePlaceholder": "Otsikko",
-    "notesPlaceholder": "Muistiinpanot",
+    "formSubtitle": "Lisää tapahtuma perheen kalenteriin: valitse tyyppi, nimi ja kesto.",
+    "nameLabel": "Nimi",
+    "titlePlaceholder": "Esim. Annan syntymäpäivä",
+    "typeLabel": "Tyyppi",
+    "startLabel": "Alkaa",
+    "endLabel": "Päättyy",
+    "notesLabel": "Muistiinpanot",
+    "notesPlaceholder": "Lisätiedot (valinnainen)",
     "create": "Luo tapahtuma",
-    "back": "Takaisin tapahtumiin"
+    "saving": "Tallennetaan…",
+    "failed": "Tapahtuman luonti epäonnistui.",
+    "endBeforeStart": "Päättymisajan on oltava alkamisajan jälkeen.",
+    "back": "Takaisin tapahtumiin",
+    "types": {
+      "birthday": "Syntymäpäivä",
+      "business_trip": "Työmatka",
+      "travel_with_kids": "Matka lasten kanssa",
+      "travel_without_kids": "Matka ilman lapsia",
+      "doctor": "Lääkärikäynti",
+      "school": "Kouluun liittyvä"
+    }
   }
 }

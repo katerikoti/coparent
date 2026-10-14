@@ -123,8 +123,8 @@ export default async function DashboardPage() {
               <Link href="../events/new" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
                 {t("addEvent")}
               </Link>
-              <Link href="../requests" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
-                {t("requestsShort")}
+              <Link href="../requests/new" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
+                {t("requestChange")}
               </Link>
             </div>
 
