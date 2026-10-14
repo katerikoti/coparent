@@ -14,7 +14,7 @@ const weekdays = [
   { value: 6, label: "Saturday" },
 ];
 
-export default function SettingsForm({ familyId, timeZone }: { familyId: string; timeZone: string }) {
+export default function SettingsForm({ familyId, timeZone, primaryParentName = "Primary parent", otherParentName = "Other parent" }: { familyId: string; timeZone: string; primaryParentName?: string; otherParentName?: string; }) {
   const [intervalWeeks, setIntervalWeeks] = useState(2);
   const [referenceDate, setReferenceDate] = useState("2026-01-05");
   const [parentBStartWeekday, setParentBStartWeekday] = useState(3);
@@ -58,7 +58,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700">Interval (weeks)</label>
+        <label className="block text-sm font-medium text-slate-700">Repeat every (weeks)</label>
         <input type="number" min={1} max={8} value={intervalWeeks} onChange={(e) => setIntervalWeeks(Number(e.target.value))} className={input} />
       </div>
       <div>
@@ -67,7 +67,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">Other parent starts on</label>
+          <label className="block text-sm font-medium text-slate-700">{otherParentName}’s period starts on</label>
           <select value={parentBStartWeekday} onChange={(e) => setParentBStartWeekday(Number(e.target.value))} className={input}>
             {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>
@@ -79,7 +79,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">Other parent ends on</label>
+          <label className="block text-sm font-medium text-slate-700">{otherParentName}’s period ends on</label>
           <select value={parentBEndWeekday} onChange={(e) => setParentBEndWeekday(Number(e.target.value))} className={input}>
             {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>

@@ -103,7 +103,19 @@ export default async function DashboardPage() {
             </div>
 
             <div className="mt-5">
-              <h3 className="mb-2 text-sm font-semibold text-slate-700">Calendar</h3>
+              <h3 className="mb-2 text-lg font-semibold text-slate-900">Calendar</h3>
+              <div className="mb-3 flex flex-wrap gap-3 text-xs text-slate-600">
+                {parents.map((p, i) => (
+                  <span key={p.id} className="inline-flex items-center gap-1">
+                    <span className="h-3 w-3 rounded-full" style={{ backgroundColor: ["#4f46e5","#10b981","#f59e0b"][i] }} />
+                    {p.name}
+                  </span>
+                ))}
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-3 w-3 rounded-full bg-amber-100" />
+                  Event
+                </span>
+              </div>
               <MonthCalendar month={now} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} />
             </div>
 
