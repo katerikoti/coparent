@@ -41,7 +41,7 @@ export default function SignUpPage() {
     <div className="mx-auto flex max-w-md flex-col">
       <div className="rounded-2xl bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-slate-900">{t("signUp")}</h1>
-        <p className="mt-1 text-sm text-slate-500">{token ? t("joiningFamily") : "Create your CoParent account."}</p>
+        <p className="mt-1 text-sm text-slate-500">{token ? t("joiningFamily") : t("signUpSubtitle")}</p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("name")}</label>

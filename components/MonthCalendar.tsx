@@ -23,18 +23,28 @@ export type CalendarParent = {
   name: string;
 };
 
+export type PendingRequest = {
+  id: string;
+  startAt: Date;
+  endAt: Date;
+  color: string;
+  label: string;
+};
+
 export default function MonthCalendar({
   month,
   periods,
   events,
   parents,
   weekdays,
+  pendingRequests = [],
 }: {
   month: Date;
   periods: CalendarPeriod[];
   events: CalendarEvent[];
   parents: CalendarParent[];
   weekdays: string[];
+  pendingRequests?: PendingRequest[];
 }) {
   const firstDay = startOfMonth(month);
   const daysInMonth = getDaysInMonth(month);
@@ -56,6 +66,9 @@ export default function MonthCalendar({
   const dayEvents = (day: Date) =>
     events.filter((e) => e.startAt <= dayEnd(day) && e.endAt > dayStart(day));
 
+  const dayPending = (day: Date) =>
+    pendingRequests.filter((r) => r.startAt <= dayEnd(day) && r.endAt > dayStart(day));
+
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
       <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50 text-center text-xs font-semibold text-slate-500">
@@ -68,6 +81,7 @@ export default function MonthCalendar({
           if (!day) return <div key={`empty-${idx}`} className="h-28 border-b border-r border-slate-100 bg-slate-50/50" />;
           const ps = dayPeriods(day);
           const evs = dayEvents(day);
+          const pps = dayPending(day);
           const uniqueParents = Array.from(new Set(ps.map((p) => p.responsibleUserId)));
           const bg =
             uniqueParents.length >= 2
@@ -76,11 +90,24 @@ export default function MonthCalendar({
               ? colorFor(uniqueParents[0])
               : "#f8fafc";
           return (
-            <div key={day.toISOString()} className="h-28 border-b border-r border-slate-100 p-2">
+            <div
+              key={day.toISOString()}
+              className="h-28 border-b border-r border-slate-100 p-2"
+              style={pps.length > 0 ? { outline: `2px dashed ${pps[0].color}`, outlineOffset: "-2px" } : undefined}
+            >
               <div className="mb-1 flex items-center justify-between">
                 <span className="text-sm font-semibold text-slate-700">{day.getDate()}</span>
               </div>
               <div className="h-2 rounded-full" style={{ background: bg }} />
+              {pps.slice(0, 1).map((r) => (
+                <div
+                  key={r.id}
+                  className="mt-1 truncate rounded border border-dashed px-1.5 py-0.5 text-[10px] font-medium"
+                  style={{ borderColor: r.color, color: r.color }}
+                >
+                  {r.label}
+                </div>
+              ))}
               <div className="mt-2 space-y-1">
                 {evs.slice(0, 2).map((e) => (
                   <div key={e.id} className="truncate rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">

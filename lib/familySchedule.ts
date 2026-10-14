@@ -1,7 +1,11 @@
 import { getDb } from "@/lib/db";
-import { recurringScheduleRules, familyMembers, families } from "@/db/schema";
-import { eq, and, desc } from "drizzle-orm";
-import { generateParentingPeriods, RecurringRuleInput } from "@/lib/schedule";
+import { recurringScheduleRules, familyMembers, families, parentingPeriods } from "@/db/schema";
+import { eq, and, desc, lt, gt } from "drizzle-orm";
+import {
+  generateParentingPeriods,
+  applyPeriodOverrides,
+  RecurringRuleInput,
+} from "@/lib/schedule";
 import { format } from "date-fns";
 
 export interface ParentPair { parentAId: string; parentBId: string | null; }
@@ -67,9 +71,42 @@ export async function generateFamilyPeriods(familyId: string, from: Date, to: Da
   // filter effective dates roughly
   const periods = generateParentingPeriods(rule, from, to);
   const { parentAId, parentBId } = await getParentPair(familyId);
-  return periods.map((p) => ({
+  const baseline = periods.map((p) => ({
     responsibleUserId: p.responsible === "B" ? parentBId ?? "__other__" : parentAId,
     responsible: p.responsible,
+    startAt: p.startAt,
+    endAt: p.endAt,
+  }));
+
+  // Approved change requests are stored as authoritative periods. Overlay them
+  // on the recurring schedule so an accepted change actually moves the calendar.
+  const db = getDb();
+  const overrides = await db
+    .select()
+    .from(parentingPeriods)
+    .where(
+      and(
+        eq(parentingPeriods.familyId, familyId),
+        eq(parentingPeriods.status, "authoritative"),
+        lt(parentingPeriods.startAt, to),
+        gt(parentingPeriods.endAt, from),
+      ),
+    );
+
+  if (overrides.length === 0) return baseline;
+
+  const applied = applyPeriodOverrides(
+    baseline.map(({ responsibleUserId, startAt, endAt }) => ({ responsibleUserId, startAt, endAt })),
+    overrides.map((o) => ({
+      responsibleUserId: o.responsibleUserId,
+      startAt: new Date(o.startAt),
+      endAt: new Date(o.endAt),
+    })),
+  );
+
+  return applied.map((p) => ({
+    responsibleUserId: p.responsibleUserId,
+    responsible: (p.responsibleUserId === parentBId ? "B" : "A") as "A" | "B",
     startAt: p.startAt,
     endAt: p.endAt,
   }));

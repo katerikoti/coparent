@@ -21,6 +21,55 @@ export interface GeneratedPeriod {
   endAt: Date;
 }
 
+export interface DatedPeriod {
+  responsibleUserId: string;
+  startAt: Date;
+  endAt: Date;
+}
+
+/**
+ * Overlay authoritative periods (e.g. approved change requests) on top of the
+ * generated recurring schedule. Each override replaces whatever responsibility
+ * the baseline had during its exact window, splitting the surrounding baseline
+ * periods so the result is always a clean, non-overlapping timeline.
+ * Overrides are applied in chronological order, so a later override wins where
+ * two of them overlap.
+ */
+export function applyPeriodOverrides(
+  baseline: DatedPeriod[],
+  overrides: DatedPeriod[],
+): DatedPeriod[] {
+  const sorted = [...overrides].sort((a, b) => a.startAt.getTime() - b.startAt.getTime());
+  let result: DatedPeriod[] = baseline.map((p) => ({ ...p }));
+
+  for (const ov of sorted) {
+    if (ov.endAt.getTime() <= ov.startAt.getTime()) continue;
+    const next: DatedPeriod[] = [];
+    for (const p of result) {
+      const noOverlap =
+        ov.endAt.getTime() <= p.startAt.getTime() || ov.startAt.getTime() >= p.endAt.getTime();
+      if (noOverlap) {
+        next.push(p);
+        continue;
+      }
+      if (p.startAt.getTime() < ov.startAt.getTime()) {
+        next.push({ ...p, endAt: new Date(ov.startAt) });
+      }
+      if (p.endAt.getTime() > ov.endAt.getTime()) {
+        next.push({ ...p, startAt: new Date(ov.endAt) });
+      }
+    }
+    next.push({
+      responsibleUserId: ov.responsibleUserId,
+      startAt: new Date(ov.startAt),
+      endAt: new Date(ov.endAt),
+    });
+    result = next;
+  }
+
+  return result.sort((a, b) => a.startAt.getTime() - b.startAt.getTime());
+}
+
 function parseTime(t: string): { h: number; m: number } {
   const [h, m] = t.split(":").map((x) => parseInt(x, 10));
   return { h: h || 0, m: m || 0 };

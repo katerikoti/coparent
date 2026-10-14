@@ -39,7 +39,7 @@ export default function SignInPage() {
     <div className="mx-auto flex max-w-md flex-col">
       <div className="rounded-2xl bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-slate-900">{t("signIn")}</h1>
-        <p className="mt-1 text-sm text-slate-500">Welcome back to CoParent.</p>
+        <p className="mt-1 text-sm text-slate-500">{t("signInSubtitle")}</p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("email")}</label>

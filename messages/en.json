@@ -31,6 +31,8 @@
     "email": "Email",
     "password": "Password",
     "name": "Name",
+    "signInSubtitle": "Welcome back to CoParent.",
+    "signUpSubtitle": "Create your CoParent account.",
     "joiningFamily": "You'll be connected to the family when you create your account."
   },
   "dashboard": {
@@ -63,7 +65,9 @@
     "prevMonth": "Previous month",
     "nextMonth": "Next month",
     "thisMonth": "This month",
-    "eventLabel": "Event"
+    "eventLabel": "Event",
+    "pendingLabel": "Change request (pending)",
+    "pendingBadge": "Request: {name}"
   },
   "calendar": {
     "title": "Calendar",

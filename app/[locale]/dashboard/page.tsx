@@ -82,6 +82,19 @@ export default async function DashboardPage({
         const current = periods.find((p) => p.startAt <= now && p.endAt > now);
         const nh = nextHandover(periods, now);
         const pending = await listChangeRequests(f.id, "pending");
+        const pendingForCalendar = pending
+          .filter((r) => r.proposedStartAt && r.proposedEndAt)
+          .map((r) => {
+            const idx = parents.findIndex((p) => p.id === r.requesterUserId);
+            const requesterName = idx >= 0 ? parents[idx].name : t("otherParentName");
+            return {
+              id: r.id,
+              startAt: new Date(r.proposedStartAt as Date | string),
+              endAt: new Date(r.proposedEndAt as Date | string),
+              color: parentColors[idx >= 0 ? idx : 0],
+              label: t("pendingBadge", { name: requesterName }),
+            };
+          });
         const balance = await getBalanceSummary(f.id);
         const withYou = current?.responsibleUserId === session.user.id;
         const currentParent = current ? parents.find((p) => p.id === current.responsibleUserId) : null;
@@ -171,8 +184,14 @@ export default async function DashboardPage({
                   <span className="h-3 w-3 rounded-full bg-amber-100" />
                   {t("eventLabel")}
                 </span>
+                {pendingForCalendar.length > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <span className="h-3 w-3 rounded-sm border-2 border-dashed border-slate-400" />
+                    {t("pendingLabel")}
+                  </span>
+                )}
               </div>
-              <MonthCalendar month={calendarMonth} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} weekdays={weekdays} />
+              <MonthCalendar month={calendarMonth} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} weekdays={weekdays} pendingRequests={pendingForCalendar} />
             </div>
           </section>
         );

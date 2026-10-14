@@ -102,3 +102,40 @@ describe("effective range", () => {
     expect(periods.length).toBe(0);
   });
 });
+
+import { applyPeriodOverrides } from "@/lib/schedule";
+
+describe("approved change overrides", () => {
+  const A = "user-a";
+  const B = "user-b";
+  const baseline = [
+    { responsibleUserId: A, startAt: new Date("2026-03-01T00:00:00Z"), endAt: new Date("2026-03-10T00:00:00Z") },
+  ];
+
+  it("splits the baseline so the override window belongs to the requester", () => {
+    const out = applyPeriodOverrides(baseline, [
+      { responsibleUserId: B, startAt: new Date("2026-03-04T00:00:00Z"), endAt: new Date("2026-03-06T00:00:00Z") },
+    ]);
+    expect(out.map((p) => [p.responsibleUserId, p.startAt.toISOString(), p.endAt.toISOString()])).toEqual([
+      [A, "2026-03-01T00:00:00.000Z", "2026-03-04T00:00:00.000Z"],
+      [B, "2026-03-04T00:00:00.000Z", "2026-03-06T00:00:00.000Z"],
+      [A, "2026-03-06T00:00:00.000Z", "2026-03-10T00:00:00.000Z"],
+    ]);
+  });
+
+  it("a later override wins where two overlap", () => {
+    const out = applyPeriodOverrides(baseline, [
+      { responsibleUserId: B, startAt: new Date("2026-03-04T00:00:00Z"), endAt: new Date("2026-03-08T00:00:00Z") },
+      { responsibleUserId: A, startAt: new Date("2026-03-05T00:00:00Z"), endAt: new Date("2026-03-06T00:00:00Z") },
+    ]);
+    const mid = out.find((p) => p.startAt.toISOString() === "2026-03-05T00:00:00.000Z");
+    expect(mid?.responsibleUserId).toBe(A);
+    expect(out.every((p) => p.startAt.getTime() < p.endAt.getTime())).toBe(true);
+  });
+
+  it("leaves the baseline untouched when there are no overrides", () => {
+    expect(applyPeriodOverrides(baseline, []).map((p) => p.startAt.toISOString())).toEqual([
+      "2026-03-01T00:00:00.000Z",
+    ]);
+  });
+});

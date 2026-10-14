@@ -31,6 +31,8 @@
     "email": "Sähköposti",
     "password": "Salasana",
     "name": "Nimi",
+    "signInSubtitle": "Tervetuloa takaisin CoParentiin.",
+    "signUpSubtitle": "Luo CoParent-tilisi.",
     "joiningFamily": "Sinut liitetään perheeseen, kun luot tilin."
   },
   "dashboard": {
@@ -63,7 +65,9 @@
     "prevMonth": "Edellinen kuukausi",
     "nextMonth": "Seuraava kuukausi",
     "thisMonth": "Tähän kuukauteen",
-    "eventLabel": "Tapahtuma"
+    "eventLabel": "Tapahtuma",
+    "pendingLabel": "Muutospyyntö (odottaa)",
+    "pendingBadge": "Pyyntö: {name}"
   },
   "calendar": {
     "title": "Kalenteri",
