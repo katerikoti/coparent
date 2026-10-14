@@ -22,6 +22,13 @@
       "when": 1791999436249,
       "tag": "0002_long_landau",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792004368297,
+      "tag": "0003_shallow_lester",
+      "breakpoints": true
     }
   ]
 }

@@ -22,7 +22,7 @@ export async function createFamily(name: string) {
     const [family] = await db.select().from(families).where(eq(families.id, existing[0].familyId)).limit(1);
     if (family) return family;
   }
-  const [family] = await db.insert(families).values({ name }).returning();
+  const [family] = await db.insert(families).values({ name, primaryParentUserId: user.id }).returning();
   await db.insert(familyMembers).values({
     familyId: family.id,
     userId: user.id,
@@ -104,4 +104,16 @@ export async function getMyFamilies() {
   // First version: one primary family per user.
   result.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   return result.slice(0, 1);
+}
+
+export async function setPrimaryParent(familyId: string, userId: string) {
+  const user = await requireSession();
+  const db = getDb();
+  const membership = await db.select().from(familyMembers).where(and(eq(familyMembers.familyId, familyId), eq(familyMembers.userId, user.id), eq(familyMembers.status, "active")));
+  if (membership.length === 0) throw new Error("Forbidden");
+  // the chosen user must be a member of the family
+  const target = await db.select().from(familyMembers).where(and(eq(familyMembers.familyId, familyId), eq(familyMembers.userId, userId)));
+  if (target.length === 0) throw new Error("User is not a family member");
+  await db.update(families).set({ primaryParentUserId: userId, updatedAt: new Date() }).where(eq(families.id, familyId));
+  return { ok: true };
 }

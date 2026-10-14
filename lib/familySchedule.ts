@@ -1,5 +1,5 @@
 import { getDb } from "@/lib/db";
-import { recurringScheduleRules, familyMembers } from "@/db/schema";
+import { recurringScheduleRules, familyMembers, families } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { generateParentingPeriods, RecurringRuleInput } from "@/lib/schedule";
 
@@ -8,9 +8,14 @@ export interface ParentPair { parentAId: string; parentBId: string | null; }
 export async function getParentPair(familyId: string): Promise<ParentPair> {
   const db = getDb();
   const members = await db.select().from(familyMembers).where(eq(familyMembers.familyId, familyId));
-  const owner = members.find((m: any) => m.role === "owner") ?? members[0];
-  const other = members.find((m: any) => m.userId !== owner?.userId) ?? null;
-  return { parentAId: owner?.userId, parentBId: other?.userId ?? null };
+  const [family] = await db.select().from(families).where(eq(families.id, familyId)).limit(1);
+  let primaryId = family?.primaryParentUserId ?? null;
+  if (!primaryId || !members.some((m: any) => m.userId === primaryId)) {
+    const owner = members.find((m: any) => m.role === "owner") ?? members[0];
+    primaryId = owner?.userId ?? null;
+  }
+  const other = members.find((m: any) => m.userId !== primaryId) ?? null;
+  return { parentAId: primaryId ?? undefined as any, parentBId: other?.userId ?? null };
 }
 
 export async function getActiveRule(familyId: string): Promise<RecurringRuleInput | null> {

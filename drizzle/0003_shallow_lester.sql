@@ -1,0 +1,1 @@
+ALTER TABLE "families" ADD COLUMN "primary_parent_user_id" text;

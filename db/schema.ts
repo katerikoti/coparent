@@ -57,6 +57,7 @@ export const verification = pgTable("verification", {
 export const families = pgTable("families", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
+  primaryParentUserId: text("primary_parent_user_id"),
   timeZone: text("time_zone").default("Europe/Helsinki").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
