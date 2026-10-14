@@ -16,6 +16,12 @@ async function requireSession() {
 export async function createFamily(name: string) {
   const user = await requireSession();
   const db = getDb();
+  // A user should belong to one primary family in the first version.
+  const existing = await db.select().from(familyMembers).where(eq(familyMembers.userId, user.id));
+  if (existing.length > 0) {
+    const [family] = await db.select().from(families).where(eq(families.id, existing[0].familyId)).limit(1);
+    if (family) return family;
+  }
   const [family] = await db.insert(families).values({ name }).returning();
   await db.insert(familyMembers).values({
     familyId: family.id,
@@ -95,5 +101,7 @@ export async function getMyFamilies() {
     const [family] = await db.select().from(families).where(eq(families.id, m.familyId));
     if (family) result.push({ ...family, role: m.role });
   }
-  return result;
+  // First version: one primary family per user.
+  result.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  return result.slice(0, 1);
 }

@@ -33,17 +33,19 @@ export default function AppHeader() {
           <Link href={`/${locale}/dashboard`} className="text-lg font-bold text-indigo-600">
             CoParent
           </Link>
-          <nav className="hidden items-center gap-4 md:flex">
-            {links.map((l) => (
-              <Link
-                key={l.key}
-                href={`/${locale}${l.href}`}
-                className="text-sm font-medium text-slate-600 hover:text-indigo-600"
-              >
-                {l.key.charAt(0).toUpperCase() + l.key.slice(1)}
-              </Link>
-            ))}
-          </nav>
+          {session.data?.user && (
+            <nav className="hidden items-center gap-4 md:flex">
+              {links.map((l) => (
+                <Link
+                  key={l.key}
+                  href={`/${locale}${l.href}`}
+                  className="text-sm font-medium text-slate-600 hover:text-indigo-600"
+                >
+                  {l.key.charAt(0).toUpperCase() + l.key.slice(1)}
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
@@ -61,15 +63,17 @@ export default function AppHeader() {
           )}
         </div>
       </div>
-      <div className="border-t border-slate-100 px-4 py-2 md:hidden">
-        <nav className="flex flex-wrap gap-3">
-          {links.map((l) => (
-            <Link key={l.key} href={`/${locale}${l.href}`} className="text-xs font-medium text-slate-600">
-              {l.key.charAt(0).toUpperCase() + l.key.slice(1)}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      {session.data?.user && (
+        <div className="border-t border-slate-100 px-4 py-2 md:hidden">
+          <nav className="flex flex-wrap gap-3">
+            {links.map((l) => (
+              <Link key={l.key} href={`/${locale}${l.href}`} className="text-xs font-medium text-slate-600">
+                {l.key.charAt(0).toUpperCase() + l.key.slice(1)}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
