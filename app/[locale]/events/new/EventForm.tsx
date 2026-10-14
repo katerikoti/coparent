@@ -17,7 +17,7 @@ export default function EventForm({ families }: { families: { id: string; name: 
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const input = "mt-1 h-12 w-full rounded-md border border-slate-300 px-4 outline-none focus:border-violet-500";
+  const input = "mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,7 +66,7 @@ export default function EventForm({ families }: { families: { id: string; name: 
           </div>
           <textarea value={notes} onChange={(e)=>setNotes(e.target.value)} placeholder={t("notesPlaceholder")} className={`${input} min-h-[100px]`} />
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <button className="inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700">
+          <button className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700">
             {t("create")}
           </button>
         </form>

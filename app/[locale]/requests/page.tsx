@@ -34,7 +34,7 @@ export default async function RequestsPage() {
           ) : (
             <div className="space-y-3">
               {requests.map((r) => (
-                <article key={r.id} className="rounded-md border border-slate-200 p-4">
+                <article key={r.id} className="rounded-xl border border-slate-200 p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses[r.status] ?? "bg-slate-100"}`}>
                       {r.status}

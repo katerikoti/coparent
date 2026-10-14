@@ -37,18 +37,18 @@ export default function SignUpPage() {
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("name")}</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} required className="mt-1 h-12 w-full rounded-md border border-slate-300 px-4 outline-none focus:border-violet-500" />
+            <input value={name} onChange={(e) => setName(e.target.value)} required className="mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("email")}</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required className="mt-1 h-12 w-full rounded-md border border-slate-300 px-4 outline-none focus:border-violet-500" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required className="mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("password")}</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={8} className="mt-1 h-12 w-full rounded-md border border-slate-300 px-4 outline-none focus:border-violet-500" />
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={8} className="mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500" />
           </div>
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <button disabled={loading} className="inline-flex h-12 w-full items-center justify-center rounded-md bg-violet-600 px-4 font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
+          <button disabled={loading} className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 px-4 font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
             {loading ? "..." : t("signUp")}
           </button>
         </form>

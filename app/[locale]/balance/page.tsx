@@ -40,7 +40,7 @@ export default async function BalancePage() {
                 <p className="text-slate-500">{t("balanceZero")}</p>
               ) : (
                 s.entries.map((e) => (
-                  <div key={e.id} className="flex flex-col rounded-md border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div key={e.id} className="flex flex-col rounded-xl border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="font-medium text-slate-900">{e.reason}</p>
                       <p className="text-xs text-slate-500">{formatDate(new Date(e.effectiveDate))}</p>

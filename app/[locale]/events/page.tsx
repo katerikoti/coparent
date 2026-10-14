@@ -26,7 +26,7 @@ export default async function EventsPage() {
         </div>
         <Link
           href="../events/new"
-          className="inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700"
+          className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700"
         >
           {t("newEvent")}
         </Link>
@@ -42,7 +42,7 @@ export default async function EventsPage() {
               {events.map((e) => (
                 <article
                   key={e.id}
-                  className="rounded-md border border-slate-200 p-4 transition hover:border-violet-300"
+                  className="rounded-xl border border-slate-200 p-4 transition hover:border-violet-300"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="font-semibold text-slate-900">{e.title}</h3>

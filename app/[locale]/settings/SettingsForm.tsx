@@ -21,7 +21,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const input = "mt-1 h-12 w-full rounded-md border border-slate-300 px-4 outline-none focus:border-violet-500";
+  const input = "mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -93,7 +93,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
       </div>
       {error && <p className="text-sm text-rose-600">{error}</p>}
       {success && <p className="text-sm text-emerald-600">{t("saved")}</p>}
-      <button disabled={loading} className="inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
+      <button disabled={loading} className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
         {loading ? "..." : t("save")}
       </button>
     </form>
