@@ -44,6 +44,11 @@
     "balanceTitle": "Time balance",
     "balanceUnit": "days",
     "balanceDetails": "View breakdown",
+    "inviteOther": "Invite other parent",
+    "shareLink": "Share this secure link (single-use, expires in 7 days):",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "inviteCode": "Invite code (if needed): {token}",
     "balancePositive": "You have more compensable parenting time than the agreed baseline.",
     "balanceNegative": "You have less compensable parenting time than the agreed baseline.",
     "balanceZero": "No outstanding compensable difference.",
@@ -82,6 +87,13 @@
   "requests": {
     "title": "Change requests",
     "noRequests": "No requests"
+  },
+  "invite": {
+    "acceptTitle": "Accept invitation",
+    "tokenProvided": "Invitation provided.",
+    "tokenMissing": "Invitation code is missing.",
+    "accept": "Accept",
+    "failed": "Accepting failed."
   },
   "events": {
     "title": "Events",

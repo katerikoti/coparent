@@ -47,7 +47,7 @@ export default function PrimaryParentPicker({
       <button
         onClick={save}
         disabled={saving || selected === currentPrimaryId}
-        className="mt-4 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+        className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
       >
         {saving ? "..." : t("savePrimary")}
       </button>

@@ -52,12 +52,12 @@ export default function AppHeader() {
           {session.data?.user ? (
             <button
               onClick={signOut}
-              className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm hover:bg-slate-50"
+              className="inline-flex h-9 items-center rounded-lg border border-slate-200 px-3 text-sm hover:bg-slate-50"
             >
               {nav("signOut")}
             </button>
           ) : (
-            <Link href={`/${locale}/auth/sign-in`} className="rounded-lg bg-violet-600 px-3 py-1.5 text-sm text-white">
+            <Link href={`/${locale}/auth/sign-in`} className="inline-flex h-9 items-center rounded-lg bg-violet-600 px-3 text-sm text-white">
               {auth("signIn")}
             </Link>
           )}

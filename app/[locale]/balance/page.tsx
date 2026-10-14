@@ -3,7 +3,7 @@ import { getMyFamilies } from "@/app/actions/families";
 import { getBalanceSummary } from "@/app/actions/balance";
 import { redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { formatDays } from "@/lib/format";
+import { formatDays, formatDate } from "@/lib/format";
 
 export default async function BalancePage() {
   const session = await getSession();
@@ -43,7 +43,7 @@ export default async function BalancePage() {
                   <div key={e.id} className="flex flex-col rounded-xl border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="font-medium text-slate-900">{e.reason}</p>
-                      <p className="text-xs text-slate-500">{e.effectiveDate}</p>
+                      <p className="text-xs text-slate-500">{formatDate(new Date(e.effectiveDate))}</p>
                     </div>
                     <span className={`mt-2 font-semibold sm:mt-0 ${e.amountHalfDays > 0 ? "text-violet-600" : "text-rose-600"}`}>
                       {formatDays(e.amountHalfDays, locale)} {t("balanceUnit")}

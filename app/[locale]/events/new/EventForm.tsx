@@ -4,6 +4,7 @@ import { createEvent } from "@/app/actions/events";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { formatDateTime } from "@/lib/format";
 
 export default function EventForm({ families }: { families: { id: string; name: string }[] }) {
   const t = useTranslations("events");
@@ -16,7 +17,7 @@ export default function EventForm({ families }: { families: { id: string; name: 
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const input = "mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-violet-500";
+  const input = "mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,12 +55,18 @@ export default function EventForm({ families }: { families: { id: string; name: 
           </select>
           <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder={t("titlePlaceholder")} required className={input} />
           <div className="grid gap-4 sm:grid-cols-2">
-            <input value={start} onChange={(e)=>setStart(e.target.value)} type="datetime-local" required className={input} />
-            <input value={end} onChange={(e)=>setEnd(e.target.value)} type="datetime-local" required className={input} />
+            <div>
+              <input value={start} onChange={(e)=>setStart(e.target.value)} type="datetime-local" required className={input} />
+              {start && <p className="mt-1 text-xs text-slate-400">{formatDateTime(new Date(start))}</p>}
+            </div>
+            <div>
+              <input value={end} onChange={(e)=>setEnd(e.target.value)} type="datetime-local" required className={input} />
+              {end && <p className="mt-1 text-xs text-slate-400">{formatDateTime(new Date(end))}</p>}
+            </div>
           </div>
           <textarea value={notes} onChange={(e)=>setNotes(e.target.value)} placeholder={t("notesPlaceholder")} className={`${input} min-h-[100px]`} />
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <button className="rounded-xl bg-violet-600 px-5 py-2.5 font-semibold text-white hover:bg-violet-700">
+          <button className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700">
             {t("create")}
           </button>
         </form>

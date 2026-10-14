@@ -34,14 +34,14 @@ export default function SignInPage() {
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("email")}</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-violet-500" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required className="mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("password")}</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-violet-500" />
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required className="mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500" />
           </div>
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <button disabled={loading} className="w-full rounded-xl bg-violet-600 px-4 py-2.5 font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
+          <button disabled={loading} className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 px-4 font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
             {loading ? "..." : t("signIn")}
           </button>
         </form>

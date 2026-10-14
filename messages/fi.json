@@ -44,6 +44,11 @@
     "balanceTitle": "Aikasaldo",
     "balanceUnit": "vrk",
     "balanceDetails": "Näytä erittely",
+    "inviteOther": "Kutsu toinen vanhempi",
+    "shareLink": "Jaa tämä turvallinen linkki (kertakäyttöinen, vanhenee 7 päivässä):",
+    "copyLink": "Kopioi linkki",
+    "copied": "Kopioitu",
+    "inviteCode": "Kutsukoodi tarvittaessa: {token}",
     "balancePositive": "Sinulla on enemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
     "balanceNegative": "Sinulla on vähemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
     "balanceZero": "Ei avointa korvattavaa eroa.",
@@ -82,6 +87,13 @@
   "requests": {
     "title": "Muutospyynnöt",
     "noRequests": "Ei muutospyyntöjä"
+  },
+  "invite": {
+    "acceptTitle": "Hyväksy kutsu",
+    "tokenProvided": "Kutsu on mukana.",
+    "tokenMissing": "Kutsukoodi puuttuu.",
+    "accept": "Hyväksy",
+    "failed": "Hyväksyminen epäonnistui."
   },
   "events": {
     "title": "Tapahtumat",

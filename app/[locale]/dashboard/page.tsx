@@ -30,7 +30,7 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold text-slate-900">{t("title")}</h1>
           <p className="mt-2 text-slate-600">{t("noFamily")}</p>
           <form action={async () => { "use server"; const { createFamily } = await import("@/app/actions/families"); await createFamily("My Family"); }} className="mt-6">
-            <button className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-700">
+            <button className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700">
               {t("createFamily")}
             </button>
           </form>
@@ -121,10 +121,10 @@ export default async function DashboardPage() {
             )}
 
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Link href="../events/new" className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-medium hover:bg-slate-50">
+              <Link href="../events/new" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
                 {t("addEvent")}
               </Link>
-              <Link href="../requests" className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-medium hover:bg-slate-50">
+              <Link href="../requests" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
                 {t("requestsShort")}
               </Link>
             </div>

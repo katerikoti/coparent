@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createRecurringRule } from "@/app/actions/schedule";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { formatDate } from "@/lib/format";
 
 export default function SettingsForm({ familyId, timeZone }: { familyId: string; timeZone: string; }) {
   const t = useTranslations("settings");
@@ -20,7 +21,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const input = "mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-violet-500";
+  const input = "mt-1 h-11 w-full rounded-xl border border-slate-300 px-4 outline-none focus:border-violet-500";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,6 +58,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("referenceWeek")}</label>
         <input type="date" value={referenceDate} onChange={(e) => setReferenceDate(e.target.value)} className={input} />
+        <p className="mt-1 text-xs text-slate-400">{referenceDate ? formatDate(new Date(referenceDate)) : ""}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -68,6 +70,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
         <div>
           <label className="block text-sm font-medium text-slate-700">{t("startTime")}</label>
           <input type="time" value={parentBStartTime} onChange={(e) => setParentBStartTime(e.target.value)} className={input} />
+          <p className="mt-1 text-xs text-slate-400">{parentBStartTime}</p>
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -80,15 +83,17 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
         <div>
           <label className="block text-sm font-medium text-slate-700">{t("endTime")}</label>
           <input type="time" value={parentBEndTime} onChange={(e) => setParentBEndTime(e.target.value)} className={input} />
+          <p className="mt-1 text-xs text-slate-400">{parentBEndTime}</p>
         </div>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("effectiveFrom")}</label>
         <input type="date" value={effectiveStart} onChange={(e) => setEffectiveStart(e.target.value)} className={input} />
+        <p className="mt-1 text-xs text-slate-400">{effectiveStart ? formatDate(new Date(effectiveStart)) : ""}</p>
       </div>
       {error && <p className="text-sm text-rose-600">{error}</p>}
       {success && <p className="text-sm text-emerald-600">{t("saved")}</p>}
-      <button disabled={loading} className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
+      <button disabled={loading} className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
         {loading ? "..." : t("save")}
       </button>
     </form>
