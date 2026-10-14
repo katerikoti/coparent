@@ -58,16 +58,16 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700">Repeat every (weeks)</label>
+        <label className="block text-sm font-medium text-slate-700">Repeat interval (weeks)</label>
         <input type="number" min={1} max={8} value={intervalWeeks} onChange={(e) => setIntervalWeeks(Number(e.target.value))} className={input} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700">Reference date (a starting week)</label>
+        <label className="block text-sm font-medium text-slate-700">Reference week start date</label>
         <input type="date" value={referenceDate} onChange={(e) => setReferenceDate(e.target.value)} className={input} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">{otherParentName}’s period starts on</label>
+          <label className="block text-sm font-medium text-slate-700">Period start weekday</label>
           <select value={parentBStartWeekday} onChange={(e) => setParentBStartWeekday(Number(e.target.value))} className={input}>
             {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>
@@ -79,7 +79,7 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">{otherParentName}’s period ends on</label>
+          <label className="block text-sm font-medium text-slate-700">Period end weekday</label>
           <select value={parentBEndWeekday} onChange={(e) => setParentBEndWeekday(Number(e.target.value))} className={input}>
             {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
           </select>
@@ -90,7 +90,7 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700">Effective start date</label>
+        <label className="block text-sm font-medium text-slate-700">Effective from</label>
         <input type="date" value={effectiveStart} onChange={(e) => setEffectiveStart(e.target.value)} className={input} />
       </div>
       {error && <p className="text-sm text-rose-600">{error}</p>}

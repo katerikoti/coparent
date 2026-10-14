@@ -39,9 +39,9 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <div className="rounded-2xl bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-slate-900">Recurring parenting schedule</h2>
+                <h2 className="mb-4 text-lg font-semibold text-slate-900">Recurring period for {other?.name ?? "the other parent"}</h2>
                 <p className="mb-4 text-sm text-slate-500">
-                  This controls when {other?.name ?? "the other parent"} has the children. The other parent otherwise has all remaining time.
+                  The children are with {other?.name ?? "the other parent"} during this recurring period. The rest of the time they are with {primary?.name ?? "the primary parent"}.
                 </p>
                 <SettingsForm
                   familyId={f.id}
