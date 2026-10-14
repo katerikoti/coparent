@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import "../globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default async function LocaleLayout({ children }: { children: ReactNode }) {
   const locale = await getLocale();
