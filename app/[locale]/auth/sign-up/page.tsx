@@ -1,14 +1,15 @@
 "use client";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { acceptInvitation } from "@/app/actions/families";
 
 export default function SignUpPage() {
   const t = useTranslations("auth");
-  const router = useRouter();
   const search = useSearchParams();
-  const locale = search.get("locale") ?? "fi";
+  const locale = useLocale();
+  const token = search.get("token");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,20 +21,27 @@ export default function SignUpPage() {
     setLoading(true);
     setError(null);
     const res = await authClient.signUp.email({ name, email, password });
-    setLoading(false);
     if (res.error) {
       setError(res.error.message ?? "Sign up failed");
+      setLoading(false);
       return;
     }
-    router.push(`/${locale}/dashboard`);
-    router.refresh();
+    // If this sign-up came from an invitation link, join the family automatically.
+    if (token) {
+      try {
+        await acceptInvitation(token);
+      } catch {
+        // Ignore: the invitation may already be used; still take them to the dashboard.
+      }
+    }
+    window.location.href = `/${locale}/dashboard`;
   }
 
   return (
     <div className="mx-auto flex max-w-md flex-col">
       <div className="rounded-2xl bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-slate-900">{t("signUp")}</h1>
-        <p className="mt-1 text-sm text-slate-500">Create your CoParent account.</p>
+        <p className="mt-1 text-sm text-slate-500">{token ? t("joiningFamily") : "Create your CoParent account."}</p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700">{t("name")}</label>

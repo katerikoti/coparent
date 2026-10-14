@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { acceptInvitation } from "@/app/actions/families";
 
 export default function SignInPage() {
   const t = useTranslations("auth");
-  const router = useRouter();
+  const locale = useLocale();
+  const search = useSearchParams();
+  const token = search.get("token");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +25,14 @@ export default function SignInPage() {
       setError(res.error.message ?? "Sign in failed");
       return;
     }
-    router.push("../dashboard");
-    router.refresh();
+    if (token) {
+      try {
+        await acceptInvitation(token);
+      } catch {
+        // Ignore: the invitation may already be used; still sign them in.
+      }
+    }
+    window.location.href = `/${locale}/dashboard`;
   }
 
   return (
@@ -46,7 +55,7 @@ export default function SignInPage() {
           </button>
         </form>
         <p className="mt-4 text-sm text-slate-500">
-          <a href="sign-up" className="font-medium text-violet-600 hover:underline">{t("signUp")}</a>
+          <a href={token ? `sign-up?token=${encodeURIComponent(token)}` : "sign-up"} className="font-medium text-violet-600 hover:underline">{t("signUp")}</a>
         </p>
       </div>
     </div>

@@ -25,7 +25,8 @@
     "signUp": "Luo tili",
     "email": "Sähköposti",
     "password": "Salasana",
-    "name": "Nimi"
+    "name": "Nimi",
+    "joiningFamily": "Sinut liitetään perheeseen, kun luot tilin."
   },
   "dashboard": {
     "title": "Etusivu",
@@ -62,12 +63,23 @@
   },
   "settings": {
     "title": "Asetukset",
-    "subtitle": "Perheen ja toistuvan aikataulun asetukset.",
+    "subtitle": "Oman tilin ja perheen asetukset.",
+    "accountTitle": "Oma tili",
+    "accountHelp": "Sähköpostisi ja salasanasi.",
+    "currentPassword": "Nykyinen salasana",
+    "newPassword": "Uusi salasana",
+    "confirmPassword": "Vahvista uusi salasana",
+    "changePassword": "Vaihda salasana",
+    "passwordChanged": "Salasana vaihdettu.",
+    "passwordMismatch": "Uudet salasanat eivät täsmää.",
+    "passwordChangeFailed": "Salasanan vaihto epäonnistui.",
     "noFamily": "Perhettä ei ole vielä luotu.",
     "primaryParentTitle": "Ensisijainen vanhempi",
     "otherParentFallback": "toinen vanhempi",
     "primaryParentHelp": "Valitse vanhempi, jonka luona lapset ovat tavallisesti. Toistuva aikataulu kuvaa silloin, milloin toinen vanhempi on heidän kanssaan.",
     "savePrimary": "Tallenna ensisijainen vanhempi",
+    "inviteTitle": "Kutsu toinen vanhempi",
+    "inviteHelp": "Luo kertakäyttöinen linkki ja lähetä se toiselle vanhemmalle. Kun hän hyväksyy kutsun, hän liittyy perheeseen ja tämä osio poistuu.",
     "recurringForOther": "Toistuva jakso: {name}",
     "recurringForYou": "Oma toistuva jaksosi",
     "recurringHelpPrimary": "Lapset ovat oletuksena luonasi. Tässä määrität, milloin {name} on heidän kanssaan.",
@@ -92,6 +104,7 @@
     "acceptTitle": "Hyväksy kutsu",
     "tokenProvided": "Kutsu on mukana.",
     "tokenMissing": "Kutsukoodi puuttuu.",
+    "joining": "Yhdistetään perheeseen…",
     "accept": "Hyväksy",
     "failed": "Hyväksyminen epäonnistui."
   },

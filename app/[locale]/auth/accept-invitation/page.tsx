@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { authClient } from "@/lib/auth-client";
 import { acceptInvitation } from "@/app/actions/families";
 
 export default function AcceptInvitationPage() {
@@ -10,35 +11,37 @@ export default function AcceptInvitationPage() {
   const locale = useLocale();
   const t = useTranslations("invite");
   const token = sp.get("token") ?? "";
+  const session = authClient.useSession();
+  const userId = session.data?.user?.id ?? null;
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [working, setWorking] = useState(false);
+  const started = useRef(false);
 
-  async function accept() {
-    setLoading(true);
-    setError(null);
-    try {
-      await acceptInvitation(token);
-      router.push(`/${locale}/dashboard`);
-      router.refresh();
-    } catch (e: any) {
-      setError(e?.message ?? t("failed"));
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (session.isPending) return;
+    if (!token) return;
+
+    // Not signed in yet: send them to create an account, keeping the invite token.
+    if (!userId) {
+      router.replace(`/${locale}/auth/sign-up?token=${encodeURIComponent(token)}`);
+      return;
     }
-  }
+
+    if (started.current) return;
+    started.current = true;
+    setWorking(true);
+    acceptInvitation(token)
+      .then(() => router.replace(`/${locale}/dashboard`))
+      .catch((e: any) => setError(e?.message ?? t("failed")))
+      .finally(() => setWorking(false));
+  }, [session.isPending, userId, token, locale, router]);
 
   return (
     <main className="mx-auto max-w-md p-6">
       <h1 className="text-2xl font-bold text-slate-900">{t("acceptTitle")}</h1>
-      <p className="mt-2 text-slate-600">{token ? t("tokenProvided") : t("tokenMissing")}</p>
+      {!token && <p className="mt-2 text-sm text-rose-600">{t("tokenMissing")}</p>}
+      {token && working && <p className="mt-2 text-slate-600">{t("joining")}</p>}
       {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
-      <button
-        onClick={accept}
-        disabled={loading || !token}
-        className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
-      >
-        {loading ? "..." : t("accept")}
-      </button>
     </main>
   );
 }

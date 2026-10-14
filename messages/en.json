@@ -25,7 +25,8 @@
     "signUp": "Create account",
     "email": "Email",
     "password": "Password",
-    "name": "Name"
+    "name": "Name",
+    "joiningFamily": "You'll be connected to the family when you create your account."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -62,12 +63,23 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Family and recurring schedule configuration.",
+    "subtitle": "Your account and family settings.",
+    "accountTitle": "My account",
+    "accountHelp": "Your email and password.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "changePassword": "Change password",
+    "passwordChanged": "Password changed.",
+    "passwordMismatch": "The new passwords do not match.",
+    "passwordChangeFailed": "Changing the password failed.",
     "noFamily": "No family yet.",
     "primaryParentTitle": "Primary parent",
     "otherParentFallback": "the other parent",
     "primaryParentHelp": "Choose the parent the children are normally with. The recurring schedule then describes when the other parent has them.",
     "savePrimary": "Save primary parent",
+    "inviteTitle": "Invite the other parent",
+    "inviteHelp": "Create a single-use link and send it to the other parent. When they accept, they join the family and this section disappears.",
     "recurringForOther": "Recurring period for {name}",
     "recurringForYou": "Your recurring period",
     "recurringHelpPrimary": "The children are with you by default. This configures when {name} has them.",
@@ -92,6 +104,7 @@
     "acceptTitle": "Accept invitation",
     "tokenProvided": "Invitation provided.",
     "tokenMissing": "Invitation code is missing.",
+    "joining": "Connecting you to the family…",
     "accept": "Accept",
     "failed": "Accepting failed."
   },

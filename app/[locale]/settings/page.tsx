@@ -8,6 +8,8 @@ import { getDb } from "@/lib/db";
 import { familyMembers, user as userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getTranslations } from "next-intl/server";
+import InviteButton from "@/components/InviteButton";
+import AccountForm from "./AccountForm";
 
 export default async function SettingsPage() {
   const session = await getSession();
@@ -23,6 +25,8 @@ export default async function SettingsPage() {
         <p className="mt-1 text-slate-500">{t("subtitle")}</p>
       </div>
 
+      <AccountForm email={session.user.email} />
+
       {families.length === 0 ? (
         <div className="rounded-2xl bg-white p-6 shadow-sm text-slate-500">{t("noFamily")}</div>
       ) : (
@@ -37,6 +41,7 @@ export default async function SettingsPage() {
           const primary = members.find((m) => m.id === pair.parentAId) ?? members[0];
           const other = members.find((m) => m.id !== primary?.id) ?? null;
           const isPrimaryViewer = session.user.id === pair.parentAId;
+          const hasOtherParent = members.length >= 2;
 
           return (
             <section key={f.id} className="space-y-6">
@@ -44,6 +49,14 @@ export default async function SettingsPage() {
                 <h2 className="text-lg font-semibold text-slate-900">{f.name}</h2>
                 <p className="text-sm text-slate-500">{f.timeZone}</p>
               </div>
+
+              {!hasOtherParent && (
+                <div className="rounded-2xl bg-white p-6 shadow-sm">
+                  <h2 className="text-lg font-semibold text-slate-900">{t("inviteTitle")}</h2>
+                  <p className="mt-1 mb-3 text-sm text-slate-500">{t("inviteHelp")}</p>
+                  <InviteButton familyId={f.id} />
+                </div>
+              )}
 
               <div className="rounded-2xl bg-white p-6 shadow-sm">
                 <PrimaryParentPicker

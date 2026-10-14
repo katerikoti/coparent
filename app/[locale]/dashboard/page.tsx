@@ -6,7 +6,6 @@ import { getBalanceSummary } from "@/app/actions/balance";
 import { redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import Link from "next/link";
-import InviteButton from "./InviteButton";
 import MonthCalendar, { parentColors } from "@/components/MonthCalendar";
 import { formatDateTime, formatDays } from "@/lib/format";
 import { user as userTable } from "@/db/schema";
@@ -144,10 +143,6 @@ export default async function DashboardPage() {
                 </span>
               </div>
               <MonthCalendar month={now} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} weekdays={weekdays} />
-            </div>
-
-            <div className="mt-5">
-              <InviteButton familyId={f.id} />
             </div>
           </section>
         );
