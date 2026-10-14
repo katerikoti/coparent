@@ -5,6 +5,7 @@ import { getDb } from "@/lib/db";
 import { recurringScheduleRules } from "@/db/schema";
 import { requireFamilyMember } from "@/lib/authorization";
 import { eq, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 const RuleInput = z.object({
   familyId: z.string().uuid(),
@@ -43,5 +44,6 @@ export async function createRecurringRule(input: z.infer<typeof RuleInput>) {
       createdByUserId: user.id,
     })
     .returning();
+  revalidatePath("/", "layout");
   return row;
 }

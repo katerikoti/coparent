@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { recurringScheduleRules, familyMembers, families } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { generateParentingPeriods, RecurringRuleInput } from "@/lib/schedule";
+import { format } from "date-fns";
 
 export interface ParentPair { parentAId: string; parentBId: string | null; }
 
@@ -28,16 +29,21 @@ export async function getActiveRule(familyId: string): Promise<RecurringRuleInpu
     .limit(1);
   const r = rows[0];
   if (!r) return null;
+  const ymd = (v: any): string => {
+    if (!v) return "";
+    if (typeof v === "string") return v.slice(0, 10);
+    return format(new Date(v), "yyyy-MM-dd");
+  };
   return {
     timeZone: r.timeZone,
     intervalWeeks: r.intervalWeeks,
-    referenceDate: r.referenceDate,
+    referenceDate: ymd(r.referenceDate),
     parentBStartWeekday: r.parentBStartWeekday as any,
     parentBStartTime: r.parentBStartTime,
     parentBEndWeekday: r.parentBEndWeekday as any,
     parentBEndTime: r.parentBEndTime,
-    effectiveStart: r.effectiveStart,
-    effectiveEnd: r.effectiveEnd,
+    effectiveStart: ymd(r.effectiveStart),
+    effectiveEnd: r.effectiveEnd ? ymd(r.effectiveEnd) : null,
   };
 }
 
@@ -62,7 +68,7 @@ export async function generateFamilyPeriods(familyId: string, from: Date, to: Da
   const periods = generateParentingPeriods(rule, from, to);
   const { parentAId, parentBId } = await getParentPair(familyId);
   return periods.map((p) => ({
-    responsibleUserId: (p.responsible === "B" ? parentBId : parentAId) ?? parentAId,
+    responsibleUserId: p.responsible === "B" ? parentBId ?? "__other__" : parentAId,
     responsible: p.responsible,
     startAt: p.startAt,
     endAt: p.endAt,

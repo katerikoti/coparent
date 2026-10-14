@@ -39,7 +39,7 @@ function weekIndex(date: Date, reference: Date, tz: string): number {
 }
 
 function isBWeek(date: Date, rule: RecurringRuleInput): boolean {
-  const ref = new Date(rule.referenceDate + "T00:00:00Z");
+  const ref = new Date(normalizeYMD(rule.referenceDate) + "T00:00:00Z");
   const idx = weekIndex(date, ref, rule.timeZone);
   const mod = ((idx % rule.intervalWeeks) + rule.intervalWeeks) % rule.intervalWeeks;
   return mod === 0;
@@ -54,12 +54,33 @@ function dateFromYMD(s: string): Date {
   return new Date(s + "T00:00:00Z");
 }
 
+function normalizeYMD(v: any): string {
+  if (!v) return "";
+  if (typeof v === "string") return v.slice(0, 10);
+  const d = new Date(v);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function generateParentingPeriods(
   rule: RecurringRuleInput,
-  from: Date,
-  to: Date,
+  fromInput: Date,
+  toInput: Date,
 ): GeneratedPeriod[] {
   const tz = rule.timeZone;
+  let from = fromInput;
+  let to = toInput;
+
+  // Clamp to the rule's effective range.
+  if (rule.effectiveStart) {
+    const es = fromZonedTime(`${normalizeYMD(rule.effectiveStart)}T00:00:00`, tz);
+    if (es.getTime() > from.getTime()) from = es;
+  }
+  if (rule.effectiveEnd) {
+    const ee = fromZonedTime(`${normalizeYMD(rule.effectiveEnd)}T23:59:59`, tz);
+    if (ee.getTime() < to.getTime()) to = ee;
+  }
+  if (to.getTime() <= from.getTime()) return [];
+
   const bPeriods: { start: Date; end: Date }[] = [];
 
   // iterate candidate days (UTC midnight steps) across range, but check zoned weekday

@@ -76,11 +76,6 @@ export default function MonthCalendar({
             <div key={day.toISOString()} className="h-28 border-b border-r border-slate-100 p-2">
               <div className="mb-1 flex items-center justify-between">
                 <span className="text-sm font-semibold text-slate-700">{day.getDate()}</span>
-                {uniqueParents.length > 0 && (
-                  <span className="text-[10px] font-medium text-white" style={{ textShadow: "0 0 2px rgba(0,0,0,0.5)" }}>
-                    {uniqueParents.length === 1 ? parents.find((p) => p.id === uniqueParents[0])?.name?.slice(0, 6) : "Split"}
-                  </span>
-                )}
               </div>
               <div className="h-2 rounded-full" style={{ background: bg }} />
               <div className="mt-2 space-y-1">

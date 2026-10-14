@@ -62,6 +62,9 @@ export default async function DashboardPage() {
           const [u] = await db.select().from(userTable).where(eq(userTable.id, id));
           parents.push({ id, name: u?.name ?? "Parent" });
         }
+        if (!members.parentBId) {
+          parents.push({ id: "__other__", name: "Other parent" });
+        }
         const current = periods.find((p) => p.startAt <= now && p.endAt > now);
         const nh = nextHandover(periods, now);
         const pending = await listChangeRequests(f.id, "pending");

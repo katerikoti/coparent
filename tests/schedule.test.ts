@@ -66,3 +66,39 @@ describe("half-day counting", () => {
     expect(adj).toBe(0);
   });
 });
+
+describe("schedule robustness", () => {
+  it("accepts a Date reference date from the database", () => {
+    const rule = {
+      timeZone: "UTC",
+      intervalWeeks: 2,
+      referenceDate: new Date("2026-01-05T00:00:00Z") as any,
+      parentBStartWeekday: 3 as const,
+      parentBStartTime: "16:00",
+      parentBEndWeekday: 1 as const,
+      parentBEndTime: "08:00",
+      effectiveStart: "2026-01-01",
+      effectiveEnd: null,
+    };
+    const periods = generateParentingPeriods(rule, new Date("2026-01-07T00:00:00Z"), new Date("2026-01-12T12:00:00Z"));
+    expect(periods.some((p) => p.responsible === "B")).toBe(true);
+  });
+});
+
+describe("effective range", () => {
+  it("does not generate periods before the effective start", () => {
+    const rule = {
+      timeZone: "UTC",
+      intervalWeeks: 1,
+      referenceDate: "2026-01-05",
+      parentBStartWeekday: 3 as const,
+      parentBStartTime: "16:00",
+      parentBEndWeekday: 1 as const,
+      parentBEndTime: "08:00",
+      effectiveStart: "2026-02-01",
+      effectiveEnd: null,
+    };
+    const periods = generateParentingPeriods(rule, new Date("2026-01-01T00:00:00Z"), new Date("2026-01-31T23:59:59Z"));
+    expect(periods.length).toBe(0);
+  });
+});
