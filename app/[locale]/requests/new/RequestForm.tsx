@@ -3,10 +3,12 @@ import { useState } from "react";
 import { createChangeRequest } from "@/app/actions/requests";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { formatDateTime } from "@/lib/format";
+import { dateTimeTextToIso, parseDateTimeText } from "@/lib/dateInput";
+import DateField from "@/components/DateField";
 
 export default function RequestForm({ families }: { families: { id: string; name: string }[] }) {
   const t = useTranslations("requests");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const [familyId, setFamilyId] = useState(families[0]?.id ?? "");
   const [reason, setReason] = useState("");
@@ -24,7 +26,13 @@ export default function RequestForm({ families }: { families: { id: string; name
       setError(t("reasonRequired"));
       return;
     }
-    if (new Date(end) <= new Date(start)) {
+    const startDate = parseDateTimeText(start);
+    const endDate = parseDateTimeText(end);
+    if (!startDate || !endDate) {
+      setError(tc("invalidDateTime"));
+      return;
+    }
+    if (endDate <= startDate) {
       setError(t("endBeforeStart"));
       return;
     }
@@ -34,8 +42,8 @@ export default function RequestForm({ families }: { families: { id: string; name
         familyId,
         category: "exception",
         reason,
-        proposedStartAt: new Date(start).toISOString(),
-        proposedEndAt: new Date(end).toISOString(),
+        proposedStartAt: dateTimeTextToIso(start),
+        proposedEndAt: dateTimeTextToIso(end),
       });
       window.location.href = `/${locale}/requests`;
     } catch (err: any) {
@@ -63,13 +71,11 @@ export default function RequestForm({ families }: { families: { id: string; name
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-slate-700">{t("proposedStart")}</label>
-              <input value={start} onChange={(e) => setStart(e.target.value)} type="datetime-local" required className={input} />
-              {start && <p className="mt-1 text-xs text-slate-400">{formatDateTime(new Date(start))}</p>}
+              <DateField mode="datetime" value={start} onChange={setStart} placeholder={tc("dateTimePlaceholder")} className={input} />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700">{t("proposedEnd")}</label>
-              <input value={end} onChange={(e) => setEnd(e.target.value)} type="datetime-local" required className={input} />
-              {end && <p className="mt-1 text-xs text-slate-400">{formatDateTime(new Date(end))}</p>}
+              <DateField mode="datetime" value={end} onChange={setEnd} placeholder={tc("dateTimePlaceholder")} className={input} />
             </div>
           </div>
           {error && <p className="text-sm text-rose-600">{error}</p>}

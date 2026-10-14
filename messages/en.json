@@ -18,7 +18,12 @@
     "create": "Create",
     "delete": "Delete",
     "edit": "Edit",
-    "back": "Back"
+    "back": "Back",
+    "openPicker": "Open picker",
+    "datePlaceholder": "dd.MM.yyyy",
+    "timePlaceholder": "HH:mm",
+    "dateTimePlaceholder": "dd.MM.yyyy HH:mm",
+    "invalidDateTime": "Check the date and time (dd.MM.yyyy HH:mm)."
   },
   "auth": {
     "signIn": "Sign in",
@@ -55,6 +60,9 @@
     "balanceNegative": "You have less compensable parenting time than the agreed baseline.",
     "balanceZero": "No outstanding compensable difference.",
     "calendarTitle": "Calendar",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "thisMonth": "This month",
     "eventLabel": "Event"
   },
   "calendar": {
@@ -148,6 +156,8 @@
     "empty": "No events yet.",
     "subtitle": "All events added to the family calendar.",
     "formTitle": "New event",
+    "editTitle": "Edit event",
+    "saveEdit": "Save changes",
     "formSubtitle": "Add an event to the family calendar: choose a type, name and duration.",
     "nameLabel": "Name",
     "titlePlaceholder": "e.g. Anna's birthday",

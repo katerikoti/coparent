@@ -4,7 +4,7 @@ import { listEvents } from "@/app/actions/events";
 import { redirect } from "next/navigation";
 import { formatDateTime } from "@/lib/format";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { eventTypeLabel } from "@/lib/eventTypes";
 
 export default async function EventsPage() {
@@ -13,6 +13,8 @@ export default async function EventsPage() {
   const families = await getMyFamilies();
   if (families.length === 0) redirect("../dashboard");
   const t = await getTranslations("events");
+  const tc = await getTranslations("common");
+  const locale = await getLocale();
 
   const typeLabels: Record<string, string> = {
     birthday: t("types.birthday"),
@@ -56,9 +58,17 @@ export default async function EventsPage() {
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="font-semibold text-slate-900">{e.title}</h3>
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                      {eventTypeLabel(e.type, typeLabels)}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
+                        {eventTypeLabel(e.type, typeLabels)}
+                      </span>
+                      <Link
+                        href={`/${locale}/events/${e.id}/edit`}
+                        className="inline-flex h-8 items-center justify-center rounded-lg border border-slate-200 px-3 text-xs font-medium hover:bg-slate-50"
+                      >
+                        {tc("edit")}
+                      </Link>
+                    </div>
                   </div>
                   <p className="mt-2 text-sm text-slate-600">
                     {formatDateTime(new Date(e.startAt))} → {formatDateTime(new Date(e.endAt))}

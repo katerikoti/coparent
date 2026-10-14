@@ -11,9 +11,13 @@ import { formatDateTime, formatDays } from "@/lib/format";
 import { user as userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { startOfMonth, endOfMonth, format } from "date-fns";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string }>;
+}) {
   const session = await getSession();
   if (!session?.user) redirect("../auth/sign-in");
   const families = await getMyFamilies();
@@ -21,6 +25,7 @@ export default async function DashboardPage() {
   const calendarT = await getTranslations("calendar");
   const nav = await getTranslations("nav");
   const locale = await getLocale();
+  const { month: monthParam } = await searchParams;
 
   if (families.length === 0) {
     return (
@@ -42,6 +47,12 @@ export default async function DashboardPage() {
   const from = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const to = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
   const weekdays = calendarT.raw("weekdays") as string[];
+  const calendarMonth = /^\d{4}-\d{2}$/.test(monthParam ?? "")
+    ? new Date(`${monthParam}-01T00:00:00`)
+    : startOfMonth(now);
+  const prevMonth = format(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1), "yyyy-MM");
+  const nextMonth = format(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1), "yyyy-MM");
+  const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "Europe/Helsinki" }).format(calendarMonth);
 
   return (
     <div className="space-y-8">
@@ -54,8 +65,8 @@ export default async function DashboardPage() {
         const periods = await generateFamilyPeriods(f.id, from, to);
         const { listEvents } = await import("@/app/actions/events");
         const events = await listEvents(f.id);
-        const monthStart = startOfMonth(now);
-        const monthEnd = endOfMonth(now);
+        const monthStart = startOfMonth(calendarMonth);
+        const monthEnd = endOfMonth(calendarMonth);
         const monthPeriods = await generateFamilyPeriods(f.id, monthStart, monthEnd);
         const members = await (await import("@/lib/familySchedule")).getParentPair(f.id);
         const db = getDb();
@@ -129,7 +140,26 @@ export default async function DashboardPage() {
             </div>
 
             <div className="mt-5">
-              <h3 className="mb-2 text-lg font-semibold text-slate-900">{t("calendarTitle")}</h3>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-lg font-semibold text-slate-900">{t("calendarTitle")}</h3>
+                <div className="flex items-center gap-1">
+                  <Link
+                    href={`?month=${prevMonth}`}
+                    aria-label={t("prevMonth")}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                  >
+                    ←
+                  </Link>
+                  <span className="min-w-36 text-center text-sm font-medium capitalize text-slate-700">{monthLabel}</span>
+                  <Link
+                    href={`?month=${nextMonth}`}
+                    aria-label={t("nextMonth")}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+                  >
+                    →
+                  </Link>
+                </div>
+              </div>
               <div className="mb-3 flex flex-wrap gap-3 text-xs text-slate-600">
                 {parents.map((p, i) => (
                   <span key={p.id} className="inline-flex items-center gap-1">
@@ -142,7 +172,7 @@ export default async function DashboardPage() {
                   {t("eventLabel")}
                 </span>
               </div>
-              <MonthCalendar month={now} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} weekdays={weekdays} />
+              <MonthCalendar month={calendarMonth} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} weekdays={weekdays} />
             </div>
           </section>
         );

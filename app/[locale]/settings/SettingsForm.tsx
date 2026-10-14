@@ -5,17 +5,20 @@ import { createRecurringRule } from "@/app/actions/schedule";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/format";
+import { dateTextToYmd, parseTimeText, ymdToDateText } from "@/lib/dateInput";
+import DateField from "@/components/DateField";
 
 export default function SettingsForm({ familyId, timeZone }: { familyId: string; timeZone: string; }) {
   const t = useTranslations("settings");
+  const tc = useTranslations("common");
   const weekdayLabels = t.raw("weekdays") as string[];
   const [intervalWeeks, setIntervalWeeks] = useState(2);
-  const [referenceDate, setReferenceDate] = useState("2026-01-05");
+  const [referenceDate, setReferenceDate] = useState(ymdToDateText("2026-01-05"));
   const [parentBStartWeekday, setParentBStartWeekday] = useState(3);
   const [parentBStartTime, setParentBStartTime] = useState("16:00");
   const [parentBEndWeekday, setParentBEndWeekday] = useState(1);
   const [parentBEndTime, setParentBEndTime] = useState("08:00");
-  const [effectiveStart, setEffectiveStart] = useState(new Date().toISOString().slice(0, 10));
+  const [effectiveStart, setEffectiveStart] = useState(formatDate(new Date()));
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,20 +28,28 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setSuccess(false);
+    const referenceDateYmd = dateTextToYmd(referenceDate);
+    const effectiveStartYmd = dateTextToYmd(effectiveStart);
+    const startTime = parseTimeText(parentBStartTime);
+    const endTime = parseTimeText(parentBEndTime);
+    if (!referenceDateYmd || !effectiveStartYmd || !startTime || !endTime) {
+      setError(tc("invalidDateTime"));
+      return;
+    }
+    setLoading(true);
     try {
       await createRecurringRule({
         familyId,
         timeZone,
         intervalWeeks,
-        referenceDate,
+        referenceDate: referenceDateYmd,
         parentBStartWeekday,
-        parentBStartTime,
+        parentBStartTime: startTime,
         parentBEndWeekday,
-        parentBEndTime,
-        effectiveStart,
+        parentBEndTime: endTime,
+        effectiveStart: effectiveStartYmd,
       });
       setSuccess(true);
       router.refresh();
@@ -57,8 +68,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("referenceWeek")}</label>
-        <input type="date" value={referenceDate} onChange={(e) => setReferenceDate(e.target.value)} className={input} />
-        <p className="mt-1 text-xs text-slate-400">{referenceDate ? formatDate(new Date(referenceDate)) : ""}</p>
+        <DateField mode="date" value={referenceDate} onChange={setReferenceDate} placeholder={tc("datePlaceholder")} className={input} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -69,8 +79,7 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700">{t("startTime")}</label>
-          <input type="time" value={parentBStartTime} onChange={(e) => setParentBStartTime(e.target.value)} className={input} />
-          <p className="mt-1 text-xs text-slate-400">{parentBStartTime}</p>
+          <DateField mode="time" value={parentBStartTime} onChange={setParentBStartTime} placeholder={tc("timePlaceholder")} className={input} />
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -82,14 +91,12 @@ export default function SettingsForm({ familyId, timeZone }: { familyId: string;
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700">{t("endTime")}</label>
-          <input type="time" value={parentBEndTime} onChange={(e) => setParentBEndTime(e.target.value)} className={input} />
-          <p className="mt-1 text-xs text-slate-400">{parentBEndTime}</p>
+          <DateField mode="time" value={parentBEndTime} onChange={setParentBEndTime} placeholder={tc("timePlaceholder")} className={input} />
         </div>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700">{t("effectiveFrom")}</label>
-        <input type="date" value={effectiveStart} onChange={(e) => setEffectiveStart(e.target.value)} className={input} />
-        <p className="mt-1 text-xs text-slate-400">{effectiveStart ? formatDate(new Date(effectiveStart)) : ""}</p>
+        <DateField mode="date" value={effectiveStart} onChange={setEffectiveStart} placeholder={tc("datePlaceholder")} className={input} />
       </div>
       {error && <p className="text-sm text-rose-600">{error}</p>}
       {success && <p className="text-sm text-emerald-600">{t("saved")}</p>}

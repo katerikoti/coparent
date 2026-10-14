@@ -18,7 +18,12 @@
     "create": "Luo",
     "delete": "Poista",
     "edit": "Muokkaa",
-    "back": "Takaisin"
+    "back": "Takaisin",
+    "openPicker": "Avaa valitsin",
+    "datePlaceholder": "dd.MM.vvvv",
+    "timePlaceholder": "HH:mm",
+    "dateTimePlaceholder": "dd.MM.vvvv HH:mm",
+    "invalidDateTime": "Tarkista päivämäärä ja kellonaika (dd.MM.vvvv HH:mm)."
   },
   "auth": {
     "signIn": "Kirjaudu sisään",
@@ -55,6 +60,9 @@
     "balanceNegative": "Sinulla on vähemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
     "balanceZero": "Ei avointa korvattavaa eroa.",
     "calendarTitle": "Kalenteri",
+    "prevMonth": "Edellinen kuukausi",
+    "nextMonth": "Seuraava kuukausi",
+    "thisMonth": "Tähän kuukauteen",
     "eventLabel": "Tapahtuma"
   },
   "calendar": {
@@ -148,6 +156,8 @@
     "empty": "Ei tapahtumia vielä.",
     "subtitle": "Kaikki perheen kalenteriin lisätyt tapahtumat.",
     "formTitle": "Uusi tapahtuma",
+    "editTitle": "Muokkaa tapahtumaa",
+    "saveEdit": "Tallenna muutokset",
     "formSubtitle": "Lisää tapahtuma perheen kalenteriin: valitse tyyppi, nimi ja kesto.",
     "nameLabel": "Nimi",
     "titlePlaceholder": "Esim. Annan syntymäpäivä",

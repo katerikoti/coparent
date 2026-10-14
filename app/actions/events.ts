@@ -64,6 +64,14 @@ export async function deleteEvent(familyId: string, id: string) {
   return { ok: true };
 }
 
+export async function getEventById(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(calendarEvents).where(eq(calendarEvents.id, id)).limit(1);
+  if (!row) return null;
+  await requireFamilyMember(row.familyId);
+  return row;
+}
+
 import { calendarEvents as ce } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
