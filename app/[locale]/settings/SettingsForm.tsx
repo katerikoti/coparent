@@ -3,18 +3,11 @@
 import { useState } from "react";
 import { createRecurringRule } from "@/app/actions/schedule";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-const weekdays = [
-  { value: 0, label: "Sunday" },
-  { value: 1, label: "Monday" },
-  { value: 2, label: "Tuesday" },
-  { value: 3, label: "Wednesday" },
-  { value: 4, label: "Thursday" },
-  { value: 5, label: "Friday" },
-  { value: 6, label: "Saturday" },
-];
-
-export default function SettingsForm({ familyId, timeZone, primaryParentName = "Primary parent", otherParentName = "Other parent" }: { familyId: string; timeZone: string; primaryParentName?: string; otherParentName?: string; }) {
+export default function SettingsForm({ familyId, timeZone }: { familyId: string; timeZone: string; }) {
+  const t = useTranslations("settings");
+  const weekdayLabels = t.raw("weekdays") as string[];
   const [intervalWeeks, setIntervalWeeks] = useState(2);
   const [referenceDate, setReferenceDate] = useState("2026-01-05");
   const [parentBStartWeekday, setParentBStartWeekday] = useState(3);
@@ -27,7 +20,7 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const input = "mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-indigo-500";
+  const input = "mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 outline-none focus:border-violet-500";
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -49,7 +42,7 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
       setSuccess(true);
       router.refresh();
     } catch (err: any) {
-      setError(err?.message ?? "Failed");
+      setError(err?.message ?? t("failed"));
     } finally {
       setLoading(false);
     }
@@ -58,45 +51,45 @@ export default function SettingsForm({ familyId, timeZone, primaryParentName = "
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700">Repeat interval (weeks)</label>
+        <label className="block text-sm font-medium text-slate-700">{t("interval")}</label>
         <input type="number" min={1} max={8} value={intervalWeeks} onChange={(e) => setIntervalWeeks(Number(e.target.value))} className={input} />
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700">Reference week start date</label>
+        <label className="block text-sm font-medium text-slate-700">{t("referenceWeek")}</label>
         <input type="date" value={referenceDate} onChange={(e) => setReferenceDate(e.target.value)} className={input} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">Period start weekday</label>
+          <label className="block text-sm font-medium text-slate-700">{t("periodStartWeekday")}</label>
           <select value={parentBStartWeekday} onChange={(e) => setParentBStartWeekday(Number(e.target.value))} className={input}>
-            {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
+            {weekdayLabels.map((label, value) => <option key={value} value={value}>{label}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">Start time</label>
+          <label className="block text-sm font-medium text-slate-700">{t("startTime")}</label>
           <input type="time" value={parentBStartTime} onChange={(e) => setParentBStartTime(e.target.value)} className={input} />
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-slate-700">Period end weekday</label>
+          <label className="block text-sm font-medium text-slate-700">{t("periodEndWeekday")}</label>
           <select value={parentBEndWeekday} onChange={(e) => setParentBEndWeekday(Number(e.target.value))} className={input}>
-            {weekdays.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
+            {weekdayLabels.map((label, value) => <option key={value} value={value}>{label}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">End time</label>
+          <label className="block text-sm font-medium text-slate-700">{t("endTime")}</label>
           <input type="time" value={parentBEndTime} onChange={(e) => setParentBEndTime(e.target.value)} className={input} />
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-slate-700">Effective from</label>
+        <label className="block text-sm font-medium text-slate-700">{t("effectiveFrom")}</label>
         <input type="date" value={effectiveStart} onChange={(e) => setEffectiveStart(e.target.value)} className={input} />
       </div>
       {error && <p className="text-sm text-rose-600">{error}</p>}
-      {success && <p className="text-sm text-emerald-600">Schedule updated. Future parenting periods will use this rule.</p>}
-      <button disabled={loading} className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">
-        {loading ? "..." : "Save recurring schedule"}
+      {success && <p className="text-sm text-emerald-600">{t("saved")}</p>}
+      <button disabled={loading} className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60">
+        {loading ? "..." : t("save")}
       </button>
     </form>
   );

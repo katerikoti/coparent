@@ -1,7 +1,8 @@
 import { getDaysInMonth, startOfMonth, addDays, format } from "date-fns";
 import { formatDate } from "@/lib/format";
 
-const parentColors = ["#4f46e5", "#10b981", "#f59e0b"];
+export const parentColors = ["#7c3aed", "#10b981", "#f59e0b"];
+export const eventColor = "#f59e0b";
 
 export type CalendarPeriod = {
   responsibleUserId: string;
@@ -27,11 +28,13 @@ export default function MonthCalendar({
   periods,
   events,
   parents,
+  weekdays,
 }: {
   month: Date;
   periods: CalendarPeriod[];
   events: CalendarEvent[];
   parents: CalendarParent[];
+  weekdays: string[];
 }) {
   const firstDay = startOfMonth(month);
   const daysInMonth = getDaysInMonth(month);
@@ -56,7 +59,7 @@ export default function MonthCalendar({
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
       <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50 text-center text-xs font-semibold text-slate-500">
-        {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
+        {weekdays.map((d) => (
           <div key={d} className="px-2 py-2">{d}</div>
         ))}
       </div>

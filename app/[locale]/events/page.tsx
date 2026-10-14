@@ -6,13 +6,12 @@ import { formatDateTime } from "@/lib/format";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-export default async function CalendarPage() {
+export default async function EventsPage() {
   const session = await getSession();
   if (!session?.user) redirect("../auth/sign-in");
   const families = await getMyFamilies();
   if (families.length === 0) redirect("../dashboard");
-  const t = await getTranslations("calendar");
-  const nav = await getTranslations("nav");
+  const t = await getTranslations("events");
 
   const eventsByFamily = await Promise.all(
     families.map(async (f) => ({ family: f, events: await listEvents(f.id) })),
@@ -21,10 +20,13 @@ export default async function CalendarPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">{t("title")}</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">{t("title")}</h1>
+          <p className="mt-1 text-slate-500">{t("subtitle")}</p>
+        </div>
         <Link
           href="../events/new"
-          className="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
+          className="inline-flex items-center justify-center rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
         >
           {t("newEvent")}
         </Link>
@@ -34,18 +36,18 @@ export default async function CalendarPage() {
         <section key={family.id} className="rounded-2xl bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">{family.name}</h2>
           {events.length === 0 ? (
-            <p className="text-slate-500">No events yet.</p>
+            <p className="text-slate-500">{t("empty")}</p>
           ) : (
             <div className="space-y-3">
               {events.map((e) => (
                 <article
                   key={e.id}
-                  className="rounded-xl border border-slate-200 p-4 transition hover:border-indigo-300"
+                  className="rounded-xl border border-slate-200 p-4 transition hover:border-violet-300"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="font-semibold text-slate-900">{e.title}</h3>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                      {e.type}
+                      {e.type.replace(/_/g, " ")}
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-slate-600">

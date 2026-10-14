@@ -7,22 +7,24 @@ import { getParentPair } from "@/lib/familySchedule";
 import { getDb } from "@/lib/db";
 import { familyMembers, user as userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { getTranslations } from "next-intl/server";
 
 export default async function SettingsPage() {
   const session = await getSession();
   if (!session?.user) redirect("../auth/sign-in");
   const families = await getMyFamilies();
   const db = getDb();
+  const t = await getTranslations("settings");
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="mt-1 text-slate-500">Family and recurring schedule configuration.</p>
+        <h1 className="text-3xl font-bold text-slate-900">{t("title")}</h1>
+        <p className="mt-1 text-slate-500">{t("subtitle")}</p>
       </div>
 
       {families.length === 0 ? (
-        <div className="rounded-2xl bg-white p-6 shadow-sm text-slate-500">No family yet.</div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm text-slate-500">{t("noFamily")}</div>
       ) : (
         await Promise.all(families.map(async (f) => {
           const memberships = await db.select().from(familyMembers).where(eq(familyMembers.familyId, f.id));
@@ -54,20 +56,15 @@ export default async function SettingsPage() {
               <div className="rounded-2xl bg-white p-6 shadow-sm">
                 <h2 className="mb-4 text-lg font-semibold text-slate-900">
                   {isPrimaryViewer
-                    ? `Recurring period for ${other?.name ?? "the other parent"}`
-                    : "Your recurring period"}
+                    ? t("recurringForOther", { name: other?.name ?? t("otherParentFallback") })
+                    : t("recurringForYou")}
                 </h2>
                 <p className="mb-4 text-sm text-slate-500">
                   {isPrimaryViewer
-                    ? `The children are with you by default. This configures when ${other?.name ?? "the other parent"} has them.`
-                    : `This configures when you have the children. The rest of the time they are with ${primary?.name ?? "the primary parent"}.`}
+                    ? t("recurringHelpPrimary", { name: other?.name ?? t("otherParentFallback") })
+                    : t("recurringHelpOther", { name: primary?.name ?? t("otherParentFallback") })}
                 </p>
-                <SettingsForm
-                  familyId={f.id}
-                  timeZone={f.timeZone}
-                  primaryParentName={primary?.name ?? "Primary parent"}
-                  otherParentName={other?.name ?? "Other parent"}
-                />
+                <SettingsForm familyId={f.id} timeZone={f.timeZone} />
               </div>
             </section>
           );

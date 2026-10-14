@@ -1,17 +1,98 @@
 {
-  "app": { "name": "CoParent" },
-  "nav": { "dashboard": "Etusivu", "calendar": "Kalenteri", "events": "Tapahtumat", "requests": "Muutospyynnöt", "balance": "Aikasaldo", "settings": "Asetukset", "signOut": "Kirjaudu ulos" },
-  "common": { "loading": "Ladataan…", "save": "Tallenna", "cancel": "Peruuta", "create": "Luo", "delete": "Poista", "edit": "Muokkaa", "back": "Takaisin" },
-  "auth": { "signIn": "Kirjaudu sisään", "signUp": "Luo tili", "email": "Sähköposti", "password": "Salasana", "name": "Nimi" },
+  "app": {
+    "name": "CoParent"
+  },
+  "nav": {
+    "dashboard": "Etusivu",
+    "calendar": "Kalenteri",
+    "events": "Tapahtumat",
+    "requests": "Muutospyynnöt",
+    "balance": "Aikasaldo",
+    "settings": "Asetukset",
+    "signOut": "Kirjaudu ulos"
+  },
+  "common": {
+    "loading": "Ladataan…",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "create": "Luo",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "back": "Takaisin"
+  },
+  "auth": {
+    "signIn": "Kirjaudu sisään",
+    "signUp": "Luo tili",
+    "email": "Sähköposti",
+    "password": "Salasana",
+    "name": "Nimi"
+  },
   "dashboard": {
     "title": "Etusivu",
     "withYou": "Lapset ovat luonasi.",
     "withOther": "Lapset ovat toisella vanhemmalla.",
+    "withParentNamed": "Lasten kanssa on nyt {name}.",
+    "currentStatus": "Lasten tämänhetkinen tilanne",
+    "noCurrentPeriod": "Ei voimassa olevaa jaksoa.",
+    "otherParentName": "Toinen vanhempi",
     "nextHandover": "Seuraava vaihto: {date}",
     "pendingRequests": "{count} muutospyyntöä odottaa vastaustasi.",
     "noFamily": "Perhettä ei ole vielä luotu.",
-    "createFamily": "Luo perhe"
+    "createFamily": "Luo perhe",
+    "addEvent": "Lisää tapahtuma",
+    "requestsShort": "Muutospyynnöt",
+    "balanceTitle": "Aikasaldo",
+    "balanceValue": "{value} puolipäivää",
+    "balanceDetails": "Näytä erittely",
+    "balancePositive": "Sinulla on enemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
+    "balanceNegative": "Sinulla on vähemmän korvattavaa hoitoaikaa kuin sovittu perustaso.",
+    "balanceZero": "Ei avointa korvattavaa eroa.",
+    "calendarTitle": "Kalenteri",
+    "eventLabel": "Tapahtuma"
   },
-  "calendar": { "title": "Kalenteri", "newEvent": "Uusi tapahtuma" },
-  "requests": { "title": "Muutospyynnöt", "noRequests": "Ei muutospyyntöjä" }
+  "calendar": {
+    "title": "Kalenteri",
+    "newEvent": "Uusi tapahtuma",
+    "weekdays": ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
+  },
+  "settings": {
+    "title": "Asetukset",
+    "subtitle": "Perheen ja toistuvan aikataulun asetukset.",
+    "noFamily": "Perhettä ei ole vielä luotu.",
+    "primaryParentTitle": "Ensisijainen vanhempi",
+    "otherParentFallback": "toinen vanhempi",
+    "primaryParentHelp": "Valitse vanhempi, jonka luona lapset ovat tavallisesti. Toistuva aikataulu kuvaa silloin, milloin toinen vanhempi on heidän kanssaan.",
+    "savePrimary": "Tallenna ensisijainen vanhempi",
+    "recurringForOther": "Toistuva jakso: {name}",
+    "recurringForYou": "Oma toistuva jaksosi",
+    "recurringHelpPrimary": "Lapset ovat oletuksena luonasi. Tässä määrität, milloin {name} on heidän kanssaan.",
+    "recurringHelpOther": "Tässä määrität, milloin sinä olet lasten kanssa. Muun ajan he ovat {name}:n luona.",
+    "interval": "Toistoväli (viikkoa)",
+    "referenceWeek": "Vertailuviikon alkupäivä",
+    "periodStartWeekday": "Jakson alkupäivä",
+    "startTime": "Alkamisaika",
+    "periodEndWeekday": "Jakson päättymispäivä",
+    "endTime": "Päättymisaika",
+    "effectiveFrom": "Voimassa alkaen",
+    "save": "Tallenna aikataulu",
+    "saved": "Aikataulu päivitetty. Tulevat hoitojaksot käyttävät tätä sääntöä.",
+    "failed": "Tallennus epäonnistui.",
+    "weekdays": ["Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai"]
+  },
+  "requests": {
+    "title": "Muutospyynnöt",
+    "noRequests": "Ei muutospyyntöjä"
+  },
+  "events": {
+    "title": "Tapahtumat",
+    "newEvent": "Lisää tapahtuma",
+    "empty": "Ei tapahtumia vielä.",
+    "subtitle": "Kaikki perheen kalenteriin lisätyt tapahtumat.",
+    "formTitle": "Uusi tapahtuma",
+    "formSubtitle": "Lisää jaettu tapahtuma perheen kalenteriin.",
+    "titlePlaceholder": "Otsikko",
+    "notesPlaceholder": "Muistiinpanot",
+    "create": "Luo tapahtuma",
+    "back": "Takaisin tapahtumiin"
+  }
 }

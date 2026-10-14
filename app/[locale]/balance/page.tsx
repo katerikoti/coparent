@@ -9,10 +9,12 @@ export default async function BalancePage() {
   if (!session?.user) redirect("../auth/sign-in");
   const families = await getMyFamilies();
   if (families.length === 0) redirect("../dashboard");
+  const t = await getTranslations("dashboard");
+  const nav = await getTranslations("nav");
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-slate-900">Time balance</h1>
+      <h1 className="text-3xl font-bold text-slate-900">{nav("balance")}</h1>
       {await Promise.all(families.map(async (f) => {
         const s = await getBalanceSummary(f.id);
         const positive = s.viewingUserHalfDays > 0;
@@ -21,24 +23,19 @@ export default async function BalancePage() {
           <section key={f.id} className="rounded-2xl bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">{f.name}</h2>
-              <span className="text-xs text-slate-500">{s.isParentA ? "Parent A view" : "Parent B view"}</span>
             </div>
-            <p className={`text-5xl font-bold ${positive ? "text-indigo-600" : negative ? "text-rose-600" : "text-slate-900"}`}>
+            <p className={`text-5xl font-bold ${positive ? "text-violet-600" : negative ? "text-rose-600" : "text-slate-900"}`}>
               {s.viewingUserHalfDays}
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              {positive
-                ? "You have more compensable parenting time than the agreed baseline."
-                : negative
-                ? "You have less compensable parenting time than the agreed baseline."
-                : "No outstanding compensable difference."}
+              {positive ? t("balancePositive") : negative ? t("balanceNegative") : t("balanceZero")}
             </p>
-            <p className="mt-1 text-xs text-slate-400">Measured in half-day units.</p>
+            <p className="mt-1 text-xs text-slate-400">{t("balanceValue", { value: s.viewingUserHalfDays })}</p>
 
-            <h3 className="mt-6 font-semibold text-slate-900">Recent adjustments</h3>
+            <h3 className="mt-6 font-semibold text-slate-900">{t("balanceDetails")}</h3>
             <div className="mt-3 space-y-2">
               {s.entries.length === 0 ? (
-                <p className="text-slate-500">None yet.</p>
+                <p className="text-slate-500">{t("balanceZero")}</p>
               ) : (
                 s.entries.map((e) => (
                   <div key={e.id} className="flex flex-col rounded-xl border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
@@ -46,7 +43,7 @@ export default async function BalancePage() {
                       <p className="font-medium text-slate-900">{e.reason}</p>
                       <p className="text-xs text-slate-500">{e.effectiveDate}</p>
                     </div>
-                    <span className={`mt-2 font-semibold sm:mt-0 ${e.amountHalfDays > 0 ? "text-indigo-600" : "text-rose-600"}`}>
+                    <span className={`mt-2 font-semibold sm:mt-0 ${e.amountHalfDays > 0 ? "text-violet-600" : "text-rose-600"}`}>
                       {e.amountHalfDays > 0 ? "+" : ""}{e.amountHalfDays} hd
                     </span>
                   </div>

@@ -1,17 +1,98 @@
 {
-  "app": { "name": "CoParent" },
-  "nav": { "dashboard": "Dashboard", "calendar": "Calendar", "events": "Events", "requests": "Change requests", "balance": "Time balance", "settings": "Settings", "signOut": "Sign out" },
-  "common": { "loading": "Loading…", "save": "Save", "cancel": "Cancel", "create": "Create", "delete": "Delete", "edit": "Edit", "back": "Back" },
-  "auth": { "signIn": "Sign in", "signUp": "Create account", "email": "Email", "password": "Password", "name": "Name" },
+  "app": {
+    "name": "CoParent"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "events": "Events",
+    "requests": "Change requests",
+    "balance": "Time balance",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name"
+  },
   "dashboard": {
     "title": "Dashboard",
     "withYou": "The children are with you.",
     "withOther": "The children are with the other parent.",
+    "withParentNamed": "The children are now with {name}.",
+    "currentStatus": "Current parenting status",
+    "noCurrentPeriod": "No current period.",
+    "otherParentName": "Other parent",
     "nextHandover": "Next handover: {date}",
     "pendingRequests": "{count} change request(s) awaiting your response.",
     "noFamily": "No family yet.",
-    "createFamily": "Create family"
+    "createFamily": "Create family",
+    "addEvent": "Add event",
+    "requestsShort": "Change requests",
+    "balanceTitle": "Time balance",
+    "balanceValue": "{value} half-days",
+    "balanceDetails": "View breakdown",
+    "balancePositive": "You have more compensable parenting time than the agreed baseline.",
+    "balanceNegative": "You have less compensable parenting time than the agreed baseline.",
+    "balanceZero": "No outstanding compensable difference.",
+    "calendarTitle": "Calendar",
+    "eventLabel": "Event"
   },
-  "calendar": { "title": "Calendar", "newEvent": "New event" },
-  "requests": { "title": "Change requests", "noRequests": "No requests" }
+  "calendar": {
+    "title": "Calendar",
+    "newEvent": "New event",
+    "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Family and recurring schedule configuration.",
+    "noFamily": "No family yet.",
+    "primaryParentTitle": "Primary parent",
+    "otherParentFallback": "the other parent",
+    "primaryParentHelp": "Choose the parent the children are normally with. The recurring schedule then describes when the other parent has them.",
+    "savePrimary": "Save primary parent",
+    "recurringForOther": "Recurring period for {name}",
+    "recurringForYou": "Your recurring period",
+    "recurringHelpPrimary": "The children are with you by default. This configures when {name} has them.",
+    "recurringHelpOther": "This configures when you have the children. The rest of the time they are with {name}.",
+    "interval": "Repeat interval (weeks)",
+    "referenceWeek": "Reference week start date",
+    "periodStartWeekday": "Period start weekday",
+    "startTime": "Start time",
+    "periodEndWeekday": "Period end weekday",
+    "endTime": "End time",
+    "effectiveFrom": "Effective from",
+    "save": "Save recurring schedule",
+    "saved": "Schedule updated. Future parenting periods will use this rule.",
+    "failed": "Saving failed.",
+    "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  },
+  "requests": {
+    "title": "Change requests",
+    "noRequests": "No requests"
+  },
+  "events": {
+    "title": "Events",
+    "newEvent": "Add event",
+    "empty": "No events yet.",
+    "subtitle": "All events added to the family calendar.",
+    "formTitle": "New event",
+    "formSubtitle": "Add a shared event to the family calendar.",
+    "titlePlaceholder": "Title",
+    "notesPlaceholder": "Notes",
+    "create": "Create event",
+    "back": "Back to events"
+  }
 }
