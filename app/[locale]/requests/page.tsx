@@ -2,8 +2,8 @@ import { getSession } from "@/lib/session";
 import { getMyFamilies } from "@/app/actions/families";
 import { listChangeRequests } from "@/app/actions/requests";
 import { redirect } from "next/navigation";
-import { formatDateTime } from "@/lib/format";
-import { getTranslations } from "next-intl/server";
+import { formatDateTime, formatDays } from "@/lib/format";
+import { getTranslations, getLocale } from "next-intl/server";
 import Link from "next/link";
 import { getDb } from "@/lib/db";
 import { familyMembers, user as userTable } from "@/db/schema";
@@ -24,6 +24,7 @@ export default async function RequestsPage() {
   const families = await getMyFamilies();
   if (families.length === 0) redirect("../dashboard");
   const t = await getTranslations("requests");
+  const locale = await getLocale();
 
   const statusLabels: Record<string, string> = {
     pending: t("status.pending"),
@@ -103,6 +104,19 @@ export default async function RequestsPage() {
                           </div>
                         )}
                       </div>
+                    )}
+                    {r.estimatedBalanceHalfDays != null && r.estimatedBalanceHalfDays !== 0 && (
+                      <p className="mt-2 text-xs text-slate-500">
+                        {t("balanceImpact")}:{" "}
+                        <span
+                          className={`font-medium ${
+                            r.estimatedBalanceHalfDays > 0 ? "text-emerald-600" : "text-rose-600"
+                          }`}
+                        >
+                          {formatDays(r.estimatedBalanceHalfDays, locale)} {t("balanceUnit")}
+                        </span>{" "}
+                        ({requesterName})
+                      </p>
                     )}
                     {r.status === "pending" && !isRequester && <RequestActions requestId={r.id} />}
                     {r.status === "pending" && isRequester && (

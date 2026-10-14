@@ -37,3 +37,25 @@ export function computeAdjustmentHalfDays(params: {
   const proposed = countHalfDays(params.proposedStart, params.proposedEnd, params.timeZone);
   return Math.round((proposed - base) * 2) / 2;
 }
+
+/**
+ * Half-days the gaining user adds relative to the baseline across [startAt, endAt).
+ * Positive means they end up with more care time than the baseline gave them.
+ * `periods` must be the non-overlapping baseline timeline covering the window.
+ */
+export function gainHalfDays(
+  periods: { responsibleUserId: string; startAt: Date; endAt: Date }[],
+  startAt: Date,
+  endAt: Date,
+  gainingUserId: string,
+  timeZone: string,
+): number {
+  let baselineForGainer = 0;
+  for (const p of periods) {
+    if (p.responsibleUserId !== gainingUserId) continue;
+    const s = new Date(Math.max(p.startAt.getTime(), startAt.getTime()));
+    const e = new Date(Math.min(p.endAt.getTime(), endAt.getTime()));
+    if (e.getTime() > s.getTime()) baselineForGainer += countHalfDays(s, e, timeZone);
+  }
+  return countHalfDays(startAt, endAt, timeZone) - baselineForGainer;
+}

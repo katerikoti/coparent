@@ -48,7 +48,7 @@ describe("initial alternating schedule", () => {
   });
 });
 
-import { countHalfDays, computeAdjustmentHalfDays } from "@/lib/balance";
+import { countHalfDays, computeAdjustmentHalfDays, gainHalfDays } from "@/lib/balance";
 
 describe("half-day counting", () => {
   it("counts two half-days in a full day boundary", () => {
@@ -64,6 +64,33 @@ describe("half-day counting", () => {
     const lateStart = new Date("2026-01-07T21:00:00Z");
     const adj = computeAdjustmentHalfDays({ baselineStart: baseStart, baselineEnd: baseEnd, proposedStart: lateStart, proposedEnd: baseEnd, timeZone: "UTC" });
     expect(adj).toBe(0);
+  });
+});
+
+describe("gain relative to the baseline schedule", () => {
+  const A = "user-a";
+  const B = "user-b";
+  const baseline = [
+    { responsibleUserId: A, startAt: new Date("2026-03-01T00:00:00Z"), endAt: new Date("2026-03-10T00:00:00Z") },
+  ];
+  const windowStart = new Date("2026-03-04T00:00:00Z");
+  const windowEnd = new Date("2026-03-06T00:00:00Z");
+
+  it("counts every half-day in the window when the other parent owned it", () => {
+    expect(gainHalfDays(baseline, windowStart, windowEnd, B, "UTC")).toBe(4);
+  });
+
+  it("is zero when the gaining user already owned the window", () => {
+    expect(gainHalfDays(baseline, windowStart, windowEnd, A, "UTC")).toBe(0);
+  });
+
+  it("only counts the part of the window the other parent owned", () => {
+    const split = [
+      { responsibleUserId: A, startAt: new Date("2026-03-04T00:00:00Z"), endAt: new Date("2026-03-05T00:00:00Z") },
+      { responsibleUserId: B, startAt: new Date("2026-03-05T00:00:00Z"), endAt: new Date("2026-03-06T00:00:00Z") },
+    ];
+    // A owns 04.03 only (2 half-days); B gains those, already owned 05.03.
+    expect(gainHalfDays(split, windowStart, windowEnd, B, "UTC")).toBe(2);
   });
 });
 

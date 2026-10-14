@@ -132,6 +132,8 @@
     "decline": "Hylkää",
     "withdraw": "Peru pyyntö",
     "awaiting": "Odottaa toisen vanhemman vastausta.",
+    "balanceImpact": "Vaikutus aikasaldoon",
+    "balanceUnit": "vrk",
     "respondFailed": "Vastauksen lähetys epäonnistui.",
     "status": {
       "pending": "Odottaa vastausta",

@@ -39,17 +39,21 @@ export default async function BalancePage() {
               {s.entries.length === 0 ? (
                 <p className="text-slate-500">{t("balanceZero")}</p>
               ) : (
-                s.entries.map((e) => (
+                s.entries.map((e) => {
+                  // Entries are stored signed relative to Parent A; show them from the viewer's side.
+                  const amount = s.isParentA ? e.amountHalfDays : -e.amountHalfDays;
+                  return (
                   <div key={e.id} className="flex flex-col rounded-xl border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="font-medium text-slate-900">{e.reason}</p>
                       <p className="text-xs text-slate-500">{formatDate(new Date(e.effectiveDate))}</p>
                     </div>
-                    <span className={`mt-2 font-semibold sm:mt-0 ${e.amountHalfDays > 0 ? "text-violet-600" : "text-rose-600"}`}>
-                      {formatDays(e.amountHalfDays, locale)} {t("balanceUnit")}
+                    <span className={`mt-2 font-semibold sm:mt-0 ${amount > 0 ? "text-violet-600" : "text-rose-600"}`}>
+                      {formatDays(amount, locale)} {t("balanceUnit")}
                     </span>
                   </div>
-                ))
+                  );
+                })
               )}
             </div>
           </section>

@@ -5,7 +5,7 @@ import { getDb } from "@/lib/db";
 import { changeRequests, changeRequestResponses, parentingPeriods, notifications, families } from "@/db/schema";
 import { requireFamilyMember } from "@/lib/authorization";
 import { eq, and } from "drizzle-orm";
-import { getParentPair } from "@/lib/familySchedule";
+import { getParentPair, scheduleGainHalfDays } from "@/lib/familySchedule";
 import { computeAdjustmentHalfDays } from "@/lib/balance";
 import { timeBalanceEntries } from "@/db/schema";
 
@@ -26,6 +26,19 @@ export async function createChangeRequest(input: z.infer<typeof CreateRequestInp
   const data = CreateRequestInput.parse(input);
   const { user } = await requireFamilyMember(data.familyId);
   const db = getDb();
+
+  // Estimate the balance effect up front so both parents can see what the
+  // change would cost before anyone approves it (positive = requester gains care time).
+  let estimatedBalanceHalfDays = data.estimatedBalanceHalfDays;
+  if (estimatedBalanceHalfDays === undefined && data.proposedStartAt && data.proposedEndAt) {
+    estimatedBalanceHalfDays = await scheduleGainHalfDays(
+      data.familyId,
+      new Date(data.proposedStartAt),
+      new Date(data.proposedEndAt),
+      user.id,
+    );
+  }
+
   const [row] = await db
     .insert(changeRequests)
     .values({
@@ -39,7 +52,7 @@ export async function createChangeRequest(input: z.infer<typeof CreateRequestInp
       proposedStartAt: data.proposedStartAt ? new Date(data.proposedStartAt) : null,
       proposedEndAt: data.proposedEndAt ? new Date(data.proposedEndAt) : null,
       proposedResponsibleUserId: data.proposedResponsibleUserId,
-      estimatedBalanceHalfDays: data.estimatedBalanceHalfDays,
+      estimatedBalanceHalfDays,
     })
     .returning();
 
@@ -85,19 +98,30 @@ export async function respondToRequest(input: { requestId: string; action: "appr
         handoverNotes: "Approved change",
       });
     }
-    // Balance adjustment for compensable requests (idempotent via unique constraint)
-    if (request.category === "compensable" && request.originalStartAt && request.originalEndAt && request.proposedStartAt && request.proposedEndAt) {
+    // Balance adjustment: an approved change shifts care time relative to the
+    // agreed baseline. Explicit compensable requests keep their original-vs-
+    // proposed calculation; one-off changes use the recurring schedule as the
+    // baseline. The amount is stored signed relative to Parent A.
+    if (request.proposedStartAt && request.proposedEndAt) {
       try {
         const [familyRow] = await db.select().from(families).where(eq(families.id, request.familyId)).limit(1);
         const tz = familyRow?.timeZone ?? "Europe/Helsinki";
         const { parentAId } = await getParentPair(request.familyId);
-        const diff = computeAdjustmentHalfDays({
-          baselineStart: request.originalStartAt,
-          baselineEnd: request.originalEndAt,
-          proposedStart: request.proposedStartAt,
-          proposedEnd: request.proposedEndAt,
-          timeZone: tz,
-        });
+        const diff =
+          request.category === "compensable" && request.originalStartAt && request.originalEndAt
+            ? computeAdjustmentHalfDays({
+                baselineStart: request.originalStartAt,
+                baselineEnd: request.originalEndAt,
+                proposedStart: request.proposedStartAt,
+                proposedEnd: request.proposedEndAt,
+                timeZone: tz,
+              })
+            : await scheduleGainHalfDays(
+                request.familyId,
+                request.proposedStartAt,
+                request.proposedEndAt,
+                request.requesterUserId,
+              );
         if (diff !== 0) {
           // sign relative to Parent A
           const requesterIsA = request.requesterUserId === parentAId;
@@ -107,7 +131,7 @@ export async function respondToRequest(input: { requestId: string; action: "appr
             changeRequestId: request.id,
             entryType: "adjustment",
             amountHalfDays: amountForA,
-            reason: request.reason ?? "Compensable schedule change",
+            reason: request.reason ?? "Schedule change",
             effectiveDate: request.proposedStartAt.toISOString().slice(0, 10),
             createdByUserId: user.id,
           }).onConflictDoNothing();

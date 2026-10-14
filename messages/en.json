@@ -132,6 +132,8 @@
     "decline": "Decline",
     "withdraw": "Withdraw request",
     "awaiting": "Awaiting the other parent's response.",
+    "balanceImpact": "Balance effect",
+    "balanceUnit": "days",
     "respondFailed": "Sending your response failed.",
     "status": {
       "pending": "Awaiting response",

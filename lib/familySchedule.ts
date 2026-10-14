@@ -1,11 +1,8 @@
 import { getDb } from "@/lib/db";
 import { recurringScheduleRules, familyMembers, families, parentingPeriods } from "@/db/schema";
 import { eq, and, desc, lt, gt } from "drizzle-orm";
-import {
-  generateParentingPeriods,
-  applyPeriodOverrides,
-  RecurringRuleInput,
-} from "@/lib/schedule";
+import { generateParentingPeriods, applyPeriodOverrides, RecurringRuleInput } from "@/lib/schedule";
+import { gainHalfDays } from "@/lib/balance";
 import { format } from "date-fns";
 
 export interface ParentPair { parentAId: string; parentBId: string | null; }
@@ -110,6 +107,29 @@ export async function generateFamilyPeriods(familyId: string, from: Date, to: Da
     startAt: p.startAt,
     endAt: p.endAt,
   }));
+}
+
+/**
+ * Half-days the gaining user adds to their own care relative to the agreed
+ * recurring baseline across [startAt, endAt). Positive means the gaining user
+ * ends up with more care time than the baseline gave them in that window.
+ */
+export async function scheduleGainHalfDays(
+  familyId: string,
+  startAt: Date,
+  endAt: Date,
+  gainingUserId: string,
+): Promise<number> {
+  const rule = (await getActiveRule(familyId)) ?? defaultRule();
+  const { parentAId, parentBId } = await getParentPair(familyId);
+  const ownerOf = (responsible: "A" | "B") =>
+    responsible === "B" ? parentBId ?? "__other__" : parentAId;
+  const periods = generateParentingPeriods(rule, startAt, endAt).map((p) => ({
+    responsibleUserId: ownerOf(p.responsible),
+    startAt: p.startAt,
+    endAt: p.endAt,
+  }));
+  return gainHalfDays(periods, startAt, endAt, gainingUserId, rule.timeZone);
 }
 
 export function nextHandover(periods: { startAt: Date; endAt: Date }[], now: Date) {
