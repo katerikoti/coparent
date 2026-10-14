@@ -1,0 +1,20 @@
+{
+  "node": {
+    "407d64bdd9600d108b68a85190965c686652182c6e": {
+      "workers": {
+        "app/[locale]/auth/accept-invitation/page": {
+          "moduleId": 15430,
+          "async": false,
+          "exportedName": "acceptInvitation",
+          "filename": "app/actions/families.ts"
+        }
+      },
+      "layer": {
+        "app/[locale]/auth/accept-invitation/page": "action-browser"
+      },
+      "exportedName": "acceptInvitation",
+      "filename": "app/actions/families.ts"
+    }
+  },
+  "edge": {}
+}

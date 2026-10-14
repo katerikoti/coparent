@@ -1,0 +1,2 @@
+ALTER TABLE "change_requests" ADD COLUMN "proposed_responsible_user_id" text;--> statement-breakpoint
+ALTER TABLE "change_requests" ADD CONSTRAINT "change_requests_proposed_responsible_user_id_user_id_fk" FOREIGN KEY ("proposed_responsible_user_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;

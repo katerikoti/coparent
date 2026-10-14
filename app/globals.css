@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+:root {
+  --parent-a: #2563eb;
+  --parent-b: #16a34a;
+  --neutral: #64748b;
+}

@@ -1,0 +1,68 @@
+import { describe, it, expect } from "vitest";
+import { generateParentingPeriods } from "@/lib/schedule";
+
+describe("initial alternating schedule", () => {
+  const rule = {
+    timeZone: "UTC",
+    intervalWeeks: 2,
+    referenceDate: "2026-01-05", // Monday of first B week
+    parentBStartWeekday: 3 as const,
+    parentBStartTime: "16:00",
+    parentBEndWeekday: 1 as const,
+    parentBEndTime: "08:00",
+    effectiveStart: "2026-01-01",
+    effectiveEnd: null,
+  };
+  // Actually need referenceDate in B week; 2026-01-05 Monday, B week should include Wed 2026-01-07.
+  it("Wednesday 16:00 is start of B period", () => {
+    const from = new Date("2026-01-07T00:00:00Z");
+    const to = new Date("2026-01-08T00:00:00Z");
+    const periods = generateParentingPeriods(rule, from, to);
+    // find period covering Wed 16
+    const p = periods.find((x) => x.startAt <= new Date("2026-01-07T16:00:00Z") && x.endAt > new Date("2026-01-07T16:00:00Z"));
+    expect(p?.responsible).toBe("B");
+    expect(p?.startAt.toISOString()).toBe("2026-01-07T16:00:00.000Z");
+  });
+  it("Monday 08:00 is end of B period and A begins", () => {
+    const from = new Date("2026-01-12T00:00:00Z");
+    const to = new Date("2026-01-13T00:00:00Z");
+    const periods = generateParentingPeriods(rule, from, to);
+    const p = periods.find((x) => x.startAt <= new Date("2026-01-12T07:00:00Z") && x.endAt > new Date("2026-01-12T07:00:00Z"));
+    expect(p?.responsible).toBe("B");
+    expect(p?.endAt.toISOString()).toBe("2026-01-12T08:00:00.000Z");
+    const a = periods.find((x) => x.startAt.toISOString() === "2026-01-12T08:00:00.000Z");
+    expect(a?.responsible).toBe("A");
+  });
+  it("following week is all A", () => {
+    const from = new Date("2026-01-14T00:00:00Z");
+    const to = new Date("2026-01-15T00:00:00Z");
+    const periods = generateParentingPeriods(rule, from, to);
+    expect(periods.every((p) => p.responsible === "A")).toBe(true);
+  });
+  it("pattern repeats: next B period two weeks later", () => {
+    const from = new Date("2026-01-21T00:00:00Z");
+    const to = new Date("2026-01-22T00:00:00Z");
+    const periods = generateParentingPeriods(rule, from, to);
+    const p = periods.find((x) => x.startAt <= new Date("2026-01-21T16:00:00Z") && x.endAt > new Date("2026-01-21T16:00:00Z"));
+    expect(p?.responsible).toBe("B");
+  });
+});
+
+import { countHalfDays, computeAdjustmentHalfDays } from "@/lib/balance";
+
+describe("half-day counting", () => {
+  it("counts two half-days in a full day boundary", () => {
+    // Wed 08? Let's use a 24h from 08:00 to next 08:00 => 2 half days
+    const start = new Date("2026-01-07T08:00:00Z");
+    const end = new Date("2026-01-08T08:00:00Z");
+    expect(countHalfDays(start, end, "UTC")).toBe(2);
+  });
+  it("late pickup same day still same overnight unit", () => {
+    // baseline Wed 16:00 -> Thu? Actually 16:00 to 16? Use difference zero for 21 pickup vs 16
+    const baseStart = new Date("2026-01-07T16:00:00Z");
+    const baseEnd = new Date("2026-01-12T08:00:00Z");
+    const lateStart = new Date("2026-01-07T21:00:00Z");
+    const adj = computeAdjustmentHalfDays({ baselineStart: baseStart, baselineEnd: baseEnd, proposedStart: lateStart, proposedEnd: baseEnd, timeZone: "UTC" });
+    expect(adj).toBe(0);
+  });
+});

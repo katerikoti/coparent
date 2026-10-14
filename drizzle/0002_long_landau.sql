@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "time_balance_change_request_idx" ON "time_balance_entries" USING btree ("change_request_id");
