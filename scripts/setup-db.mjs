@@ -19,7 +19,11 @@ async function main() {
   console.log("Created .env.local");
 
   if (existsSync(".env.local")) {
-    const result = spawnSync("npm", ["run", "db:migrate"], { stdio: "inherit", shell: true });
+    const result = spawnSync("npm", ["run", "db:migrate"], {
+      stdio: "inherit",
+      shell: true,
+      env: { ...process.env, DATABASE_URL: url },
+    });
     if (result.status !== 0) throw new Error("Migration failed");
     console.log("Migrations applied. You can now run: npm run dev");
   }
@@ -29,3 +33,4 @@ main().catch((e) => {
   console.error(e.message);
   process.exit(1);
 }).finally(() => rl.close());
+EOF
