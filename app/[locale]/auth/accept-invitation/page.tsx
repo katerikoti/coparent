@@ -35,7 +35,7 @@ export default function AcceptInvitationPage() {
       <button
         onClick={accept}
         disabled={loading || !token}
-        className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+        className="mt-4 inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
       >
         {loading ? "..." : t("accept")}
       </button>

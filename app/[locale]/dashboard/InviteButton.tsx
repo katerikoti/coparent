@@ -27,15 +27,15 @@ export default function InviteButton({ familyId }: { familyId: string }) {
 
   return (
     <div className="space-y-2">
-      <button onClick={invite} className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 px-4 text-sm font-medium hover:bg-slate-50">
+      <button onClick={invite} className="inline-flex h-12 items-center justify-center rounded-md border border-slate-300 px-4 text-sm font-medium hover:bg-slate-50">
         {t("inviteOther")}
       </button>
       {link && (
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
+        <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-xs">
           <p className="mb-1 font-medium">{t("shareLink")}</p>
           <p className="break-all text-slate-700">{link}</p>
           <div className="mt-2 flex gap-2">
-            <button onClick={copyLink} className="inline-flex h-9 items-center justify-center rounded-lg bg-violet-600 px-3 text-white hover:bg-violet-700">
+            <button onClick={copyLink} className="inline-flex h-10 items-center justify-center rounded-md bg-violet-600 px-3 text-white hover:bg-violet-700">
               {copied ? t("copied") : t("copyLink")}
             </button>
           </div>

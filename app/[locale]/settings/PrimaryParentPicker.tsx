@@ -32,7 +32,7 @@ export default function PrimaryParentPicker({
       <p className="mt-1 text-sm text-slate-500">{t("primaryParentHelp")}</p>
       <div className="mt-3 space-y-2">
         {members.map((m) => (
-          <label key={m.id} className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 hover:bg-slate-50">
+          <label key={m.id} className="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 px-4 py-3 hover:bg-slate-50">
             <input
               type="radio"
               name="primary"
@@ -47,7 +47,7 @@ export default function PrimaryParentPicker({
       <button
         onClick={save}
         disabled={saving || selected === currentPrimaryId}
-        className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+        className="mt-4 inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
       >
         {saving ? "..." : t("savePrimary")}
       </button>

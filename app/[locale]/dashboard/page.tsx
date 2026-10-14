@@ -30,7 +30,7 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold text-slate-900">{t("title")}</h1>
           <p className="mt-2 text-slate-600">{t("noFamily")}</p>
           <form action={async () => { "use server"; const { createFamily } = await import("@/app/actions/families"); await createFamily("My Family"); }} className="mt-6">
-            <button className="inline-flex h-11 items-center justify-center rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700">
+            <button className="inline-flex h-12 items-center justify-center rounded-md bg-violet-600 px-5 text-sm font-semibold text-white hover:bg-violet-700">
               {t("createFamily")}
             </button>
           </form>
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className={`rounded-xl p-4 ${withYou ? "bg-violet-50" : "bg-emerald-50"}`}>
+              <div className={`rounded-md p-4 ${withYou ? "bg-violet-50" : "bg-emerald-50"}`}>
                 <p className="text-sm font-medium text-slate-500">{t("currentStatus")}</p>
                 <p className="mt-1 text-lg font-semibold text-slate-900">
                   {current ? (withYou ? t("withYou") : t("withParentNamed", { name: currentParentName })) : t("noCurrentPeriod")}
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                 {nh && <p className="mt-2 text-sm text-slate-600">{t("nextHandover", { date: formatDateTime(nh) })}</p>}
               </div>
 
-              <div className="rounded-xl bg-slate-50 p-4">
+              <div className="rounded-md bg-slate-50 p-4">
                 <p className="text-sm font-medium text-slate-500">{t("balanceTitle")}</p>
                 <p
                   className={`mt-1 text-lg font-semibold ${
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
             </div>
 
             {pending.length > 0 && (
-              <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-4">
                 <p className="font-semibold text-amber-800">{t("pendingRequests", { count: pending.length })}</p>
                 <Link href="../requests" className="mt-1 inline-block text-sm text-amber-900 underline">
                   {nav("requests")}
@@ -121,10 +121,10 @@ export default async function DashboardPage() {
             )}
 
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Link href="../events/new" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
+              <Link href="../events/new" className="inline-flex h-12 items-center justify-center rounded-md border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
                 {t("addEvent")}
               </Link>
-              <Link href="../requests" className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
+              <Link href="../requests" className="inline-flex h-12 items-center justify-center rounded-md border border-slate-200 px-4 text-sm font-medium hover:bg-slate-50">
                 {t("requestsShort")}
               </Link>
             </div>
