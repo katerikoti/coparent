@@ -6,6 +6,12 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import InviteButton from "./InviteButton";
+import MonthCalendar from "@/components/MonthCalendar";
+import { formatDateTime } from "@/lib/format";
+import { user as userTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -43,6 +49,19 @@ export default async function DashboardPage() {
 
       {await Promise.all(families.map(async (f) => {
         const periods = await generateFamilyPeriods(f.id, from, to);
+        const { listEvents } = await import("@/app/actions/events");
+        const events = await listEvents(f.id);
+        const monthStart = startOfMonth(now);
+        const monthEnd = endOfMonth(now);
+        const monthPeriods = await generateFamilyPeriods(f.id, monthStart, monthEnd);
+        const members = await (await import("@/lib/familySchedule")).getParentPair(f.id);
+        const db = getDb();
+        const parents = [] as { id: string; name: string }[];
+        for (const id of [members.parentAId, members.parentBId]) {
+          if (!id) continue;
+          const [u] = await db.select().from(userTable).where(eq(userTable.id, id));
+          parents.push({ id, name: u?.name ?? "Parent" });
+        }
         const current = periods.find((p) => p.startAt <= now && p.endAt > now);
         const nh = nextHandover(periods, now);
         const pending = await listChangeRequests(f.id, "pending");
@@ -59,7 +78,7 @@ export default async function DashboardPage() {
               <p className="mt-1 text-lg font-semibold text-slate-900">
                 {current ? (withYou ? t("withYou") : t("withOther")) : "No current period"}
               </p>
-              {nh && <p className="mt-2 text-sm text-slate-600">{t("nextHandover", { date: nh.toLocaleString() })}</p>}
+              {nh && <p className="mt-2 text-sm text-slate-600">{t("nextHandover", { date: formatDateTime(nh) })}</p>}
             </div>
 
             {pending.length > 0 && (
@@ -81,6 +100,11 @@ export default async function DashboardPage() {
               <Link href="../requests" className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-medium hover:bg-slate-50">
                 {nav("requests")}
               </Link>
+            </div>
+
+            <div className="mt-5">
+              <h3 className="mb-2 text-sm font-semibold text-slate-700">Calendar</h3>
+              <MonthCalendar month={now} periods={monthPeriods} events={events.map((e:any)=>({...e}))} parents={parents} />
             </div>
 
             <div className="mt-5">

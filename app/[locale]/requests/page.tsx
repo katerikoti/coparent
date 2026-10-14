@@ -2,6 +2,7 @@ import { getSession } from "@/lib/session";
 import { getMyFamilies } from "@/app/actions/families";
 import { listChangeRequests } from "@/app/actions/requests";
 import { redirect } from "next/navigation";
+import { formatDateTime } from "@/lib/format";
 import { getTranslations } from "next-intl/server";
 
 const statusClasses: Record<string, string> = {
@@ -38,7 +39,7 @@ export default async function RequestsPage() {
                     <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusClasses[r.status] ?? "bg-slate-100"}`}>
                       {r.status}
                     </span>
-                    <span className="text-xs text-slate-500">{new Date(r.createdAt).toLocaleString()}</span>
+                    <span className="text-xs text-slate-500">{formatDateTime(new Date(r.createdAt))}</span>
                   </div>
                   <p className="mt-2 font-medium text-slate-900">{r.category}</p>
                   {r.reason && <p className="mt-1 text-sm text-slate-600">{r.reason}</p>}
@@ -46,12 +47,12 @@ export default async function RequestsPage() {
                     <div className="mt-3 grid gap-2 text-xs text-slate-500 sm:grid-cols-2">
                       {r.originalStartAt && (
                         <div className="rounded bg-slate-50 p-2">
-                          Original: {new Date(r.originalStartAt).toLocaleString()} → {r.originalEndAt ? new Date(r.originalEndAt).toLocaleString() : "—"}
+                          Original: {r.originalStartAt ? formatDateTime(new Date(r.originalStartAt)) : "—"} → {r.originalEndAt ? formatDateTime(new Date(r.originalEndAt)) : "—"}
                         </div>
                       )}
                       {r.proposedStartAt && (
                         <div className="rounded bg-slate-50 p-2">
-                          Proposed: {new Date(r.proposedStartAt).toLocaleString()} → {r.proposedEndAt ? new Date(r.proposedEndAt).toLocaleString() : "—"}
+                          Proposed: {r.proposedStartAt ? formatDateTime(new Date(r.proposedStartAt)) : "—"} → {r.proposedEndAt ? formatDateTime(new Date(r.proposedEndAt)) : "—"}
                         </div>
                       )}
                     </div>

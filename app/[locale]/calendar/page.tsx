@@ -2,6 +2,7 @@ import { getSession } from "@/lib/session";
 import { getMyFamilies } from "@/app/actions/families";
 import { listEvents } from "@/app/actions/events";
 import { redirect } from "next/navigation";
+import { formatDateTime } from "@/lib/format";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -48,7 +49,7 @@ export default async function CalendarPage() {
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-slate-600">
-                    {new Date(e.startAt).toLocaleString()} → {new Date(e.endAt).toLocaleString()}
+                    {formatDateTime(new Date(e.startAt))} → {formatDateTime(new Date(e.endAt))}
                   </p>
                   {e.location && <p className="mt-1 text-sm text-slate-500">{e.location}</p>}
                   {e.notes && <p className="mt-1 text-sm text-slate-700">{e.notes}</p>}
